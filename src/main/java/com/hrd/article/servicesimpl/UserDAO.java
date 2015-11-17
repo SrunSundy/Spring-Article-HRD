@@ -12,11 +12,9 @@ import org.springframework.stereotype.Repository;
 import com.hrd.article.entities.UserDTO;
 import com.hrd.article.services.UserServices;
 
-//for use @ autowired natation
 @Repository
 public class UserDAO implements UserServices {
 
-		
 	private JdbcTemplate jdbcTemplate;
 	
 	@Autowired
@@ -25,7 +23,7 @@ public class UserDAO implements UserServices {
 	}
 	
 	public List<UserDTO> listUser() {
-		return jdbcTemplate.query("SELECT * FROM tbuser",
+		return jdbcTemplate.query("SELECT * FROM tbuser ORDER BY uid DESC",
 				new RowMapper<UserDTO>(){
 					public UserDTO mapRow(ResultSet rs, int arg1) throws SQLException {
 						UserDTO user = new UserDTO();
@@ -36,28 +34,39 @@ public class UserDAO implements UserServices {
 						user.setUgender(rs.getString("ugender"));
 						user.setUtype(rs.getInt("utype"));
 						user.setUstatus(rs.getInt("ustatus"));
+						user.setUimage(rs.getString("uimage"));
 						return user;
 					}	
 				});
 	}
 
 	public int insertUser(UserDTO user) {
-		return jdbcTemplate.update("INSERT INTO tbuser(uname,upassword,uemail,ugender,utype,ustatus,uimage) VALUES(?,?,?,?,?,?,?)",user.getUname(),user.getUpassword(),user.getUemail(),user.getUgender(),user.getUtype(),user.getUstatus(),user.getUimage());
+		String sql="INSERT INTO tbuser(uname,upassword,uemail,ugender,utype,ustatus,uimage) VALUES(?,?,?,?,?,?,?)";
+		Object[] obj={user.getUname(),user.getUpassword(),user.getUemail(),user.getUgender(),user.getUtype(),user.getUstatus(),user.getUimage()};
+		return jdbcTemplate.update(sql,obj);
 	}
 
 	public int disableUser(int id) {
-		// TODO Auto-generated method stub
-		return 0;
+		String sql="UPDATE tbuser SET ustatus=0 WHERE uid=?";
+		return jdbcTemplate.update(sql,id);
 	}
 
 	public int enableUser(int id) {
-		
-		return 0;
+		String sql="UPDATE tbuser SET ustatus=1 WHERE uid=?";
+		return jdbcTemplate.update(sql,id);
 	}
 
-	public int editUser(UserDTO user, int id) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int editUser(UserDTO user) {
+		if(user.getUimage()==""){
+			String sql="UPDATE tbuser SET uname=?,upassword=?,uemail=?,ugender=?,utype=?,ustatus=? WHERE uid=?";
+			Object[] obj={user.getUname(),user.getUpassword(),user.getUemail(),user.getUgender(),user.getUtype(),user.getUstatus(),user.getUid()};
+			return jdbcTemplate.update(sql,obj);
+		}else{
+			String sql="UPDATE tbuser SET uname=?,upassword=?,uemail=?,ugender=?,utype=?,ustatus=?,uimage=? WHERE uid=?";
+			Object[] obj={user.getUname(),user.getUpassword(),user.getUemail(),user.getUgender(),user.getUtype(),user.getUstatus(),user.getUimage(),user.getUid()};
+			return jdbcTemplate.update(sql,obj);
+		}
+		
 	}
 
 	public int countUser() {
@@ -65,7 +74,7 @@ public class UserDAO implements UserServices {
 	}
 
 	public UserDTO getUser(int id) {
-		return jdbcTemplate.queryForObject("SELECT * FROM tbuser WHERE id=?",new Object[]{id},
+		return jdbcTemplate.queryForObject("SELECT * FROM tbuser WHERE uid=?",new Object[]{id},
 				new RowMapper<UserDTO>(){
 					public UserDTO mapRow(ResultSet rs, int arg1) throws SQLException {
 						UserDTO user=new UserDTO();
@@ -76,6 +85,7 @@ public class UserDAO implements UserServices {
 						user.setUgender(rs.getString("ugender"));
 						user.setUtype(rs.getInt("utype"));
 						user.setUstatus(rs.getInt("ustatus"));
+						user.setUimage(rs.getString("uimage"));
 						return user;
 					}	
 				});
