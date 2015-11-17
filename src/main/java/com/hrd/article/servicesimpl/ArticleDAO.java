@@ -1,5 +1,80 @@
 package com.hrd.article.servicesimpl;
 
-public class ArticleDAO {
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
+
+import com.hrd.article.entities.ArticleDTO;
+import com.hrd.article.entities.CategoryDTO;
+import com.hrd.article.entities.UserDTO;
+import com.hrd.article.services.ArtitcleServices;
+
+@Repository
+public class ArticleDAO implements ArtitcleServices{
+
+	private JdbcTemplate jdbcTemplate;
+	
+	@Autowired
+	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
+		this.jdbcTemplate = jdbcTemplate;
+	}
+
+	public List<ArticleDTO> listArticles(int pages, String key) {
+		int offset=(pages*10)-10;
+		return jdbcTemplate.query("SELECT * FROM tbnews n INNER JOIN tbuser u ON n.nuid=u.uid INNER JOIN tbcategory c ON c.cid=n.ncid WHERE UPPER(ncontents) LIKE UPPER(?) LIMIT 10 OFFSET ?",
+			   new Object[]{"%"+key+"%", offset}, new UserMapper());
+		
+	}
+
+	public ArticleDTO listArticle(int id) {
+		return jdbcTemplate.queryForObject("SELECT * FROM tbnews n INNER JOIN tbuser u ON n.nuid=u.uid INNER JOIN tbcategory c ON c.cid=n.ncid WHERE nid=?", new Object[]{id}, new UserMapper());
+	}
+
+	public int updateArticle(ArticleDTO article) {
+		return jdbcTemplate.update("UPDATE tbnews SET ntitle=?, ndescription=?, ncontents=?, nimage=?, npostdate=?, nuid=?, ncid=? WHERE nid=?",
+			   article.getTitle(), article.getDescription(), article.getContents(), article.getImage(), article.getPostdate(), article.getUser().getUid(), article.getCategory().getId(), article.getId());
+	}
+
+	public int insertArticle(ArticleDTO article) {
+		return jdbcTemplate.update("INSERT INTO tbnews(ntitle, ndescription, ncontents, nimage, npostdate, nuid, ncid) VALUES(?,?,?,?,?,?,?)", 
+				article.getTitle(), article.getDescription(), article.getContents(), article.getImage(), article.getPostdate(), article.getUser().getUid(), article.getCategory().getId());
+	}
+
+	public int deleteArticle(int id) {
+		return jdbcTemplate.update("DELETE FROM tbnews WHERE nid=?",id);
+	}
+
+	public List<ArticleDTO> searchArticle(String key) {
+		return jdbcTemplate.query("SELECT * FROM tbnews n INNER JOIN tbuser u ON n.nuid=u.uid INNER JOIN tbcategory c ON c.cid=n.ncid WHERE UPPER(ncontents) LIKE UPPER(?)", new Object[]{"%"+key+"%"}, new UserMapper());
+	}
+
+	private static final class UserMapper implements RowMapper<ArticleDTO>{		
+		public ArticleDTO mapRow(ResultSet rs, int rowNumber) throws SQLException {
+			ArticleDTO article = new ArticleDTO();
+			
+			article.setId(rs.getInt("nid"));
+			article.setTitle(rs.getString("ntitle"));
+			article.setDescription(rs.getString("ndescription"));
+			article.setImage(rs.getString("nimage"));
+			article.setPostdate(rs.getDate("npostdate"));
+			article.setContents(rs.getString("ncontents"));
+			
+			UserDTO user = new UserDTO();
+			user.setUid(rs.getInt("uid"));
+			
+			CategoryDTO category = new CategoryDTO();
+			category.setId(rs.getInt("cid"));
+			category.setName(rs.getString("cname"));
+			
+			article.setUser(user);
+			article.setCategory(category);
+			
+			return article;
+		}
+	}
 }
