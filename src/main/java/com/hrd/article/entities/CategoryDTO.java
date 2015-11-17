@@ -1,10 +1,14 @@
 package com.hrd.article.entities;
 
+import javax.swing.Spring;
+
 public class CategoryDTO {
 	private int id;
 	private String name;
 	private String description;
 	private int status;
+	
+	
 	public int getId() {
 		return id;
 	}
@@ -29,4 +33,5 @@ public class CategoryDTO {
 	public void setStatus(int status) {
 		this.status = status;
 	}
+	
 }
