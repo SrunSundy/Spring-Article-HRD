@@ -2,7 +2,6 @@ package com.hrd.article.servicesimpl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +16,11 @@ public class UserDAO implements UserServices {
 	@Autowired
 	private JdbcTemplate jdbctemplate;
 
-	public UserDAO(JdbcTemplate jdbctemplate) {
-		this.jdbctemplate = jdbctemplate;
+	public void setJdbcTemplate(JdbcTemplate jdbcTemplate){
+		this.jdbctemplate = jdbcTemplate;
 	}
-
+	
+	
 	public List<UserDTO> listUser() {
 		return this.jdbctemplate.query("SELECT * FROM tbuser", new RowMapper<UserDTO>() {
 			public UserDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
