@@ -12,6 +12,7 @@ public interface UserServices {
 	public int enableUser(int id);
 	public int editUser(UserDTO user,int id);
 	public int countUser();
+	public UserDTO getUser(int id);
 	
 
 }
