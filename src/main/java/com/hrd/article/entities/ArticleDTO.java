@@ -1,12 +1,14 @@
 package com.hrd.article.entities;
 
+import java.sql.Date;
+
 public class ArticleDTO {
 	private int id;
 	private String title;
 	private String description;
 	private String image;
 	private String contents;
-	private String postdate;
+	private Date postdate;
 	private int status;
 	private UserDTO user;
 	private CategoryDTO category;
@@ -40,10 +42,10 @@ public class ArticleDTO {
 	public void setContents(String contents) {
 		this.contents = contents;
 	}
-	public String getPostdate() {
+	public Date getPostdate() {
 		return postdate;
 	}
-	public void setPostdate(String postdate) {
+	public void setPostdate(Date postdate) {
 		this.postdate = postdate;
 	}
 	public int getStatus() {
