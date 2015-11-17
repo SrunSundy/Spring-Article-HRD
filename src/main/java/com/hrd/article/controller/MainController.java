@@ -16,9 +16,8 @@ public class MainController {
 	@RequestMapping( value={"/"})
 	public String getStudentList(ModelMap model) throws SQLException{
 			
-		
 		model.addAttribute("message","Hellosdfsf");
-		return "index";
+		return "home";
 		
 	}
 }

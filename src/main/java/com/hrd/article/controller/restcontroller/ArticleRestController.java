@@ -19,8 +19,7 @@ import com.hrd.article.services.UserServices;
 @RestController
 @RequestMapping("api/")
 public class ArticleRestController {
-	@Autowired
-	private UserServices userservice;
+
 	// list user
 	/*@RequestMapping(value = "/listuser", method = RequestMethod.GET)
 	public ResponseEntity<Map<String, Object>> listUser() {
