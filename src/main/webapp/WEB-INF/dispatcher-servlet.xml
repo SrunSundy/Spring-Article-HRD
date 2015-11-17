@@ -9,6 +9,7 @@
  http://www.springframework.org/schema/mvc 
  http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
 
+
 	<context:component-scan base-package="com.hrd.article" />
 
 	<mvc:annotation-driven />
@@ -20,13 +21,23 @@
 	</bean>
 
 	<mvc:resources mapping="/**" location="/resources/" />
-
+	<!--DataSource Connection -->
 	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="org.postgresql.Driver" />
-		<property name="url" value="jdbc:postgresql://192.168.178.144:5432/Article" />
+		<property name="url" value="jdbc:postgresql://localhost:5432/Article" />
 		<property name="username" value="postgres" />
 		<property name="password" value="12345" />
 	</bean>
+
+	<!-- inject datasource into jdbcTemplate -->
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<constructor-arg ref="dataSource"></constructor-arg>
+	</bean>
+
+	<!-- inject jdbcTemplate in to CategoryServiceImpl -->
+	<!-- <bean id="userServices" class="com.hrd.article.servicesimpl.UserDAO">
+		<property name="jdbcTemplate" ref="jdbcTemplate"></property>
+	</bean> -->
 	
 	<bean id="multipartResolver"
 		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
