@@ -8,11 +8,18 @@ public class UserDTO {
 	private String ugender;
 	private int utype;
 	private int ustatus;
+	private String uimage;
 	public int getUid() {
 		return uid;
 	}
 	public void setUid(int uid) {
 		this.uid = uid;
+	}
+	public String getUimage() {
+		return uimage;
+	}
+	public void setUimage(String uimage) {
+		this.uimage = uimage;
 	}
 	public String getUname() {
 		return uname;
