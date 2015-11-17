@@ -13,6 +13,6 @@ public interface CategoryService {
 	public boolean isUpdateCategory(CategoryDTO category);
 	public List<CategoryDTO> searchCategoryByName(String name);
 	public int getTotalCategory();
-
+	public boolean isStatus(int status,int id);
 	
 }

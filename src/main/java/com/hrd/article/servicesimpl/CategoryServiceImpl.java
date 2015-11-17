@@ -23,9 +23,9 @@ import com.hrd.article.services.CategoryService;
 @Repository
 public class CategoryServiceImpl implements CategoryService{
 	
-	//@Autowired
 	private JdbcTemplate jdbcTemplate;
 	
+	@Autowired
 	public void setJdbcTemplate(JdbcTemplate jdbcTemplate){
 		this.jdbcTemplate = jdbcTemplate;
 	}
@@ -148,6 +148,30 @@ public class CategoryServiceImpl implements CategoryService{
 		int total = jdbcTemplate.queryForObject(sql,Integer.class);
 		return total;
 	}
+	
+	/**
+	 * Change Status Category
+	 */
+		public boolean isStatus(int id,int status) {
+			String sql = "UPDATE tbcategory SET cstatus = ? WHERE cid = ? ;";
+			
+			if ( status == 0){
+				status = 0;
+			}else {
+				status = 1;
+			}
+			
+			System.out.println("id is: "+id);
+			System.out.println("status is: "+ status);
+			
+			Object[] obj = { status , id };
+			
+			int result = jdbcTemplate.update(sql, obj);
+			if ( result > 0 ){
+				return true;
+			}
+			return false;
+		}
 
 }
 
@@ -169,6 +193,8 @@ public class CategoryServiceImpl implements CategoryService{
 		return category;
 	}
 }
+ 
+ 
  
  
  /**

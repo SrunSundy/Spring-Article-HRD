@@ -13,8 +13,8 @@ import com.hrd.article.services.CategoryService;
 @Controller
 public class CategoryController {
 
-	@Autowired
-	private CategoryService categoryService;
+/*	@Autowired
+	private CategoryService categoryService;*/
 	
 	@RequestMapping ( value = {"/","home" }, method = RequestMethod.GET)
 	public String homePage() {
