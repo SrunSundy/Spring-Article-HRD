@@ -7,6 +7,7 @@
 		<title>Article Page</title>
 
 		<script src= "http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
 		
 		<style>
 			*{
@@ -21,7 +22,7 @@
 				width: 100%;
 			}
 			.a-container{
-				width: 1280px;
+				width: 1080px;
 				top:60px;
 				position:relative;
 			}
@@ -38,16 +39,16 @@
 				box-shadow: 0.5px 0.5px 5px #A09A9A;
 			}
 			.a-left-side{
-				width: 245px;
+				width: 205px;
 				margin-right: 10px;
 				background-color:#fff;
 			}
 			.a-body{
-				width: 770px;
+				width: 570px;
 				margin-right: 10px;
 			}
 			.a-right-side{
-				width: 245px;
+				width: 285px;
 				background-color:#fff;
 			}
 			.a-category{
@@ -58,8 +59,8 @@
 				color: #fff;
 				padding: 10px;
 			}
-			.a-category li{
-				padding: 10px;
+			.a-category li:not(first-child){
+				padding: 7px 10px 7px 30px;
 				border-bottom: 1px solid #dadada;
 			}
 			.article-block{
@@ -75,7 +76,7 @@
 				border:1px solid #dadada;
 			}
 			.article-image{
-				height: 400px;
+				height: 300px;
 				overflow:hidden;
 			}
 			.article-image img{
@@ -97,13 +98,16 @@
 				float:left;
 			}
 			.article-info pre{
-				margin-top: 10px;
+				margin-top: 7px;
 			}
 			.article-action{
 				margin-top: 10px;
 			}
 			.clear{
 				clear:both;
+			}
+			.fa{
+				padding-right: 5px;
 			}
 		</style>
 		
@@ -115,75 +119,87 @@
 				
 			</div>
 			<div class="a-container">
+			
 				<div class="a-row">
 					<div class="a-left-side">
 						<ul class="a-category">
-							<li>All Categories</li>
-							<li ng-repeat="category in categories" value="{{category.id}}">{{category.name}}</li>
+							<li id="myli" ng-click="add()"><i class="fa fa-tags"></i>All Categories</li>
+							<li ng-repeat="category in categories" value="{{category.id}}"><i class="fa fa-angle-down"></i>{{category.name}}</li>
 						</ul>
-					</div>
+						<button id="mybtn">ADD</button>
+					</div><!--/end a-left-side  -->
 					
 					<div class="a-body">
 						<div class="article-block">
-							<div class="article-item" ng-repeat="i in [1,2,3,4,5,6,7,8,9,10]">
+							<div class="article-item" ng-repeat="article in articles">
 								<div class="article-info">
-									<img src="http://www.keenthemes.com/preview/metronic/theme/assets/global/plugins/jcrop/demos/demo_files/image1.jpg"/>
-									<p>PHEARUN</p><br>
-									<pre>Sep 12 2015, 05:12 PM</pre>	
+									<img src="{{article.user.uimage}}"/>
+									<p>{{article.user.uname}}</p><br>
+									<pre>{{article.postdate}}</pre>	
 									<div class="clear"></div>								
 								</div>
 								<div class="article-components">
 									<div class="article-image">
-										<img src="http://www.keenthemes.com/preview/metronic/theme/assets/global/plugins/jcrop/demos/demo_files/image1.jpg"/>
+										<img src="{{article.image}}"/>
 									</div>
 									<div class="article-desc">
-										<h3>CSS Selector Reference</h3>
-										<p>In CSS, selectors are patterns used to select the element(s) you want to style.
-											Use our CSS Selector Tester to demonstrate the different selectors.
-											The "CSS" column indicates in which CSS version the property is defined (CSS1, CSS2, or CSS3).
-										</p>
+										<h3>{{article.title}}</h3>
+										<p>{{article.description}}</p>
 									</div>
 								</div>
 								<div class="article-action">
 									<div class="action">
-										<pre><span>1002k Likes</span><span>       500k Comments</span><span>       100k Shares</span></pre>
+										<pre><span>1002K Likes</span><span>       500K Comments</span><span>       100K Shares</span></pre>
 									</div>
 								</div>
 							</div>
 						</div>
-					</div>
+					</div><!--/end a-body  -->
 					
 					<div class="a-right-side">
 						<ul class="a-category">
 							<li>Popular Articles</li>
 							<li ng-repeat="category in categories" value="{{category.id}}">{{category.name}}</li>
 						</ul>
-					</div>
-				</div>
-			</div>
-		</div>
+					</div><!--/end a-right-side  -->
+					
+				</div><!--/end a-row  -->
+				
+			</div><!--/end a-container  -->
+			
+		</div><!--/end main container  -->
 		
 		<script>
 			var app = angular.module('myApp', []);
-			app.controller('myCtrl', function($scope){
+			app.controller('myCtrl', function($scope, $window){
 				
-				$scope.categories = [{"id":"c01","name":"Technology"},
-				                     {"id":"c02","name":"Health"},
-				                     {"id":"c03","name":"Sports"},
-				                     {"id":"c04","name":"Life"},
-				                     {"id":"c03","name":"Sports"},
-				                     {"id":"c04","name":"Life"},
-				                     {"id":"c03","name":"Sports"},
-				                     {"id":"c04","name":"Life"},
-				                     {"id":"c03","name":"Sports"},
-				                     {"id":"c04","name":"Life"}
-									];
-				$scope.articles = [  {"title":"John", "description":"Doe"}, 
-						             {"title":"Anna", "description":"Smith"}, 
-						             {"title":"Peter","description":"Jones"}
-						          ];	
+				$scope.categories = [{"id":"c01","name":"Technology"},{"id":"c02","name":"Health"},{"id":"c03","name":"Sports"},{"id":"c04","name":"Life"}];
+				
+				var username = "PHEARUN";
+				var date = new Date().toUTCString();
+				var title = "CSS Selector Reference";
+				var image = "http://www.keenthemes.com/preview/metronic/theme/assets/global/plugins/jcrop/demos/demo_files/image1.jpg";
+				var desc = "In CSS, selectors are patterns used to select the element(s) you want to style. Use our CSS Selector Tester to demonstrate the different selectors.The \"CSS\" column indicates in which CSS version the property is defined (CSS1, CSS2, or CSS3).";
+				
+				$scope.articles = [{"title":title, "description":desc, "postdate":date,"user":{uimage:image,"uname":username}, "image":image}];
+
+				$scope.add = function(){
+					$scope.articles.push({"title":title, "description":desc, "postdate":date,"user":{uimage:image,"uname":username}, "image":image}); 
+				};
+				
+				angular.element($window).bind("scroll", function() {
+                    var windowHeight = "innerHeight" in window ? window.innerHeight: document.documentElement.offsetHeight;
+                    var body = document.body, html = document.documentElement;
+                    var docHeight = Math.max(body.scrollHeight,body.offsetHeight, html.clientHeight,html.scrollHeight, html.offsetHeight);
+                    windowBottom = windowHeight + window.pageYOffset;
+
+                    if (windowBottom >= docHeight) {
+                    	console.log("reached the bottom..!");
+                    	$scope.add();
+                        console.log($scope.articles);
+                    }
+     	        });
 			});
-			
 		</script>
 	</body>
 </html>
