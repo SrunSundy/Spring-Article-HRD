@@ -10,10 +10,14 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -29,9 +33,20 @@ public class UserRestController {
 	private UserServices userService;
 	
 	//list user
-	@RequestMapping(value="/getalluser",method=RequestMethod.GET)
-	public ResponseEntity<Map<String, Object>> listUser() {
-	    List<UserDTO> list = userService.listUser();
+	@RequestMapping(value="/getalluser",method=RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> listUser(@RequestBody String info ) throws ParseException {
+		
+		//for get data from json string
+		JSONParser jsonParser = new JSONParser();
+		JSONObject jsonObject = (JSONObject) jsonParser.parse(info);
+		// get a String from the JSON object
+		String Page = (String) jsonObject.get("page");
+		int Pages=Integer.parseInt(Page);
+		String Key = (String) jsonObject.get("key");
+	
+
+		
+		List<UserDTO> list = userService.listUser(Pages,Key);
 		Map<String, Object> map = new HashMap<String, Object>();
 		if (list.isEmpty()) {
 			map.put("STATUS", HttpStatus.NOT_FOUND.value());
