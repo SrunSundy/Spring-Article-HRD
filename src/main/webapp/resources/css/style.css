@@ -296,6 +296,10 @@ h4.textdash {
 	text-align: center;
 }
 
+.text-header{
+	
+	
+}
 div.mybox:hover .iconstyle,div.mybox:hover .textdash {
 	opacity: 0.8;
 }
