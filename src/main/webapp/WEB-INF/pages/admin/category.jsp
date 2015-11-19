@@ -10,8 +10,20 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 
 <%@include file="include/header.jsp" %>
-<title>category</title>
 
+
+
+<title>category</title>
+ <style>
+		.tablex th, .tablex td { 
+    		 border-top: none !important; 
+ 		}
+ 		input[type=checkbox]{
+		   background: #888 !important;
+		   border: none !important;
+		   color: #000 !important;
+		}
+ </style>
 </head>
 <body>
 	<%@include file="include/topmenu.jsp"%>
@@ -20,11 +32,14 @@
 
 <%@include file="include/leftbar.jsp"%>
 
-	<div class="container" ng-app="myApp" ng-controller="myCtrl" ng-init="sok='dara'">
+	<div class="container" ng-app="myApp" ng-controller="myCtrl" >
 	    
-		<h1> WELCOME CATEGORY PAGE! {{sok}}</h1>
-		<button type="button" class="btn btn-info" data-toggle="modal" data-target="#myAdd" ng-click="viewCategory(cat.id)">Add</button>
-		<table class="table table-border">
+		<h1> WELCOME CATEGORY PAGE</h1>
+		
+		<button type="button" class="btn btn-success btn-msg" data-toggle="modal" data-target="#myAdd" ng-click="viewCategory(cat.id)"><i class="fa fa-plus"></i>Add</button>
+		<br/><br/>
+
+		<table class="table">
 			    <tr>
 			    	<th> ID </th>
 			    	<th> NAME </th>
@@ -33,26 +48,87 @@
 			    	<th> ACTION </th>
 			    </tr>
 				<tr ng-repeat="cat in category.RESPONSE_DATA" >
-					<td>{{ cat.id }} <input type="hidden" value="{{ cat.id }}"/></td>
+					<td>{{ $index+1 }} <input type="hidden" value="{{ cat.id }}"/></td>
 				    <td>{{ cat.name }} </td>
 				    <td>{{ cat.description }} </td>
 				    <td>
 				       <div>
-			               <input type="checkbox" value={{cat.status}} ng-click="statusCategory(cat.id,cat.status)" checked ng-if="cat.status == 1 "/>
-			               <input type="checkbox" value={{cat.status}} ng-click="statusCategory(cat.id,cat.status)" ng-if="cat.status == 0" />
-    	 
+			               <input type="checkbox" value={{cat.status}} ng-click="statusCategory(cat.id,cat.status)" checked ng-if="cat.status == 1 " 
+			               	data-toggle="modal" data-target="#myCheck" />
+			               <input type="checkbox" value={{cat.status}} ng-click="statusCategory(cat.id,cat.status)" ng-if="cat.status == 0" 
+			               data-toggle="modal" data-target="#myCheck"/>
 				       </div>
 				    	
 				   
 				    	
 				    </td>
 				    <td>
-				    	<button type="button" class="btn btn-info" data-toggle="modal" data-target="#myView" ng-click="viewCategory(cat.id)">view</button>
-				    	<button type="button" class="btn btn-info" data-toggle="modal" data-target="#myUpdate" ng-click="viewCategory(cat.id)">edit</button>
+				    	<button type="button" class="btn btn-info" data-toggle="modal" data-target="#myView" ng-click="viewCategory(cat.id)"><i class="fa fa-desktop"></i>View</button>
+				    	<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myEdit" ng-click="viewCategory(cat.id)"><i class="fa fa-pencil"></i>Edit</button>
 				     </td>
 				</tr>
 			</table>
 			
+			<!-- Modal Check -->
+			<div class="modal fade" id="myCheck" role="dialog">
+		    <div class="modal-dialog modal-sm">
+		    
+		      <!-- Modal content-->
+		      <div class="modal-content">
+
+		        <div class="modal-body">
+					<h4 ng-if="bool==true"><div class="alert alert-danger">
+					  		<strong>Status {{cstatus}}</strong> 
+						</div>
+					</h4>
+					
+					<h4 ng-if="bool==false"><div class="alert alert-info">
+					  		<strong>Status {{cstatus}}</strong> 
+						</div>
+					</h4>
+		        </div>
+	
+		      </div>		      
+		    </div>
+		  </div>
+		  
+		  	<!-- Modal Add Msg-->
+			<div class="modal fade" id="myAddMsg" role="dialog">
+		    <div class="modal-dialog modal-sm">
+		    
+		      <!-- Modal content-->
+		      <div class="modal-content">
+
+		        <div class="modal-body">
+					<h4><div class="alert alert-success">
+					  		<strong>Add Success!</strong> 
+						</div>
+					</h4>
+		        </div>
+	
+		      </div>		      
+		    </div>
+		  </div>
+		  
+		  	<!-- Modal Edit Msg -->
+			<div class="modal fade" id="myEditMsg" role="dialog">
+		    <div class="modal-dialog modal-sm">
+		    
+		      <!-- Modal content-->
+		      <div class="modal-content">
+
+		        <div class="modal-body">
+					<h4><div class="alert alert-success">
+					  		<strong>Update Success!</strong> 
+						</div>
+					</h4>
+		        </div>
+	
+		      </div>		      
+		    </div>
+		  </div>
+		  
+		  
 			<!-- Modal View -->
 		  <div class="modal fade" id="myView" role="dialog" data-keyboard="false" data-backdrop="static">
 		    <div class="modal-dialog">
@@ -61,14 +137,11 @@
 		      <div class="modal-content">
 		        <div class="modal-header">
 		          <button type="button" class="close" data-dismiss="modal">&times;</button>
-		          <h4 class="modal-title">Modal Header</h4>
+		          <h4 class="modal-title"><i class="fa fa-line-desktop"></i><i class="fa fa-desktop"></i>View Category</h4>
 		        </div>
 		        <div class="modal-body">
-		          <table class="table table-border">
-		            <tr>
-		          		<th>ID</th>
-		          		<td> {{ id }}</td>
-		          	</tr>
+		          <table class="table table-border tablex">
+
 		          	<tr>
 		          		<th>NAME</th>
 		          		<td>{{ name }}</td>
@@ -92,31 +165,32 @@
 		  </div>
 		  
 		  			<!-- Modal Update -->
-		  <div class="modal fade" id="myUpdate" role="dialog" data-keyboard="false" data-backdrop="static">
+		  <div class="modal fade" id="myEdit" role="dialog" data-keyboard="false" data-backdrop="static">
 		    <div class="modal-dialog">
 		    
 		      <!-- Modal content-->
 		      <div class="modal-content">
 		        <div class="modal-header">
 		          <button type="button" class="close" data-dismiss="modal">&times;</button>
-		          <h4 class="modal-title">Update Category</h4>
+		          <h4 class="modal-title"><i class="fa fa-pencil"></i> Update Category</h4>
 		        </div>
 		        <div class="modal-body">
 		        <frm:form id="frmedit" class="form-horizontal" modelAttribute="category" ng-submit="updateCategory($event)">
-					<table class="table table-border">
+					<table class="table table-border tablex">
 		          	<tr>
 		          		<input type="hidden" value="{{id}}" id="id" name="id"/>
 		          		<th>NAME</th>
-		          		<td><input type="text" value="{{name}}" name="name" required id="name"/></td>
+		          		<td><input type="text" class="form-control" value="{{name}}" name="name" required id="name" placeholder="Category Name"/></td>
 		          	</tr>
 		          	<tr>
 		          		<th>Description</th>
-		          		<td><input type="text" value="{{description}}" name="description" id="description" /></td>
+		          		<td><input type="text" class="form-control" value="{{description}}" name="description" id="description" placeholder="Category Description"/></td>
 		          	</tr>
 		          	<tr>
 		          		<th></th>
 		          		<td>
-		          			<button type="submit" class="btn btn-success"><i class="fa fa-plus"></i>SUBMIT</button>
+		          			<button type="submit" class="btn btn-success"><i class="fa fa-pencil" data-toggle="modal" data-target="#myEdit"></i>SUBMIT</button>
+		          			<button type="button" class="btn btn-warning" ng-click="updateClear()"><i class="fa fa-eraser"></i>CLEAR</button>
 		          		</td>
 		          	</tr>
 		          </table>
@@ -140,24 +214,25 @@
 		      <div class="modal-content">
 		        <div class="modal-header">
 		          <button type="button" class="close" data-dismiss="modal">&times;</button>
-		          <h4 class="modal-title">Update Category</h4>
+		          <h4 class="modal-title"><i class="fa fa-plus"></i>Add Category</h4>
 		        </div>
 		        <div class="modal-body">
 		        <frm:form id="frmadd" class="form-horizontal" modelAttribute="category" ng-submit="addCategory($event)">
-					<table class="table table-border">
+					<table class="table table-border tablex">
 		          	<tr>
-		          		<input type="hidden" value="{{id}}" id="id" name="id"/>
+		          		<input type="hidden" id="id" name="id" />
 		          		<th>NAME</th>
-		          		<td><input type="text" value="{{name}}" name="name" required id="name"/></td>
+		          		<td><input type="text" class="form-control"  name="name" required id="name" placeholder="Category Name" /></td>
 		          	</tr>
 		          	<tr>
 		          		<th>Description</th>
-		          		<td><input type="text" value="{{description}}" name="description" id="description" /></td>
+		          		<td><input type="text" class="form-control"  name="description" id="description" placeholder="Category Description" /></td>
 		          	</tr>
 		          	<tr>
 		          		<th></th>
 		          		<td>
-		          			<button type="submit" class="btn btn-success"><i class="fa fa-plus"></i>SUBMIT</button>
+		          			<button type="submit" class="btn btn-success" ><i class="fa fa-plus"></i>SUBMIT</button>
+		          			<button type="button" class="btn btn-warning" ng-click="addClear()"><i class="fa fa-eraser"></i>CLEAR</button>
 		          		</td>
 		          	</tr>
 		          </table>
@@ -176,7 +251,7 @@
 	
 	 <script>
 	 	var app = angular.module('myApp',[]);
-		app.controller('myCtrl',function($scope,$http){
+		app.controller('myCtrl',function($scope,$http,$timeout){
 			   
 			   $scope.category={};
 			   
@@ -197,6 +272,9 @@
 			   // call list funciton
 			   $scope.categoryfunc();
 			   
+			   $scope.id = "";
+			   $scope.name = "";
+			   $scope.description = "";
 			   //view category by id
 			 	$scope.viewCategory = function(id){
 					$http.get('http://localhost:8080/Spring-Article-HRD/category/getcategory/'+id).
@@ -207,7 +285,17 @@
 				      $scope.id = data.RESPONSE_DATA.id;
 				      $scope.name = data.RESPONSE_DATA.name;
 				      $scope.description = data.RESPONSE_DATA.description;
-				      $scope.status = data.RESPONSE_DATA.status;
+				      
+				      angular.element("#frmedit input[name='id']").val($scope.id);
+				      angular.element("#frmedit input[name='name']").val($scope.name);
+				 	  angular.element("#frmedit input[name='description']").val($scope.description);
+				 		
+				      $scope.status = 0;
+				      if ( data.RESPONSE_DATA.status == 1){
+				    	  $scope.status = "Enable";
+				      }else{
+				    	  $scope.status = "Disable";
+				      }
 				      
 				    }).
 				    error(function(data, status, headers, config) {
@@ -229,15 +317,22 @@
 					$http.put('http://localhost:8080/Spring-Article-HRD/category/updatecategory',dataObj).
 				    success(function(data, status, headers, config) {
 				      console.log(data);
-				      $scope.categoryfunc();
+				   
 				      
+				      angular.element('#myEdit').modal('hide');
+				      $scope.categoryfunc();				      
+				      
+				      angular.element('#myEditMsg').modal('show');
+				      $timeout(function() { angular.element('#myEditMsg').modal('hide'); }, 2000);
+  	
 				    }).
 				    error(function(data, status, headers, config) {
 				    	console.log('load data error...');
 				    });
-					alert("UPDATE");
+					
+  					
+
 				}
-			   
 			   
 				   //add category path object
 			 	$scope.addCategory = function($event){				   
@@ -251,31 +346,77 @@
 					$http.post('http://localhost:8080/Spring-Article-HRD/category/addcategory',dataObj).
 				    success(function(data, status, headers, config) {
 				      console.log(data);
+				      
+				      angular.element('#myAdd').modal('hide');
 				      $scope.categoryfunc();
-				    }).
-				    error(function(data, status, headers, config) {
-				    	console.log('load data error...');
-				    });
-					alert("Add");
-				}
-				   
-				   
-			 	$scope.statusCategory = function(id,status){
-					//alert("status:"+ status);
-					
-					$http.put('http://localhost:8080/Spring-Article-HRD/category/statuscategory/'+id+'/'+status).
-				    success(function(data, status, headers, config) {
-				      console.log(data);
+				      angular.element('#myAddMsg').modal('show');
+				      $timeout(function() { angular.element('#myAddMsg').modal('hide'); }, 2000);
+				      
 				      
 				    }).
 				    error(function(data, status, headers, config) {
 				    	console.log('load data error...');
 				    });
-					alert("status");
+					
+					$scope.addClear();
 				}
-			   
+				   
+				
+				// category change status
+			 	$scope.statusCategory = function(id,status){
+
+			 		$scope.cstatus = "";
+			 		$scope.bool = false;
+			 		if (status == 0){
+			 			$scope.cstatus = "Enables";
+			 			$scope.bool = false;
+			 		}else if (status == 1){
+			 			$scope.cstatus = "Disables";
+			 			$scope.bool = true;
+			 		}
+			 		
+			 		$timeout(function() { angular.element('#myCheck').modal('hide'); }, 2000);	
+					$http.put('http://localhost:8080/Spring-Article-HRD/category/statuscategory/'+id+'/'+status).
+				    success(function(data, status, headers, config) {
+				    	
+				      	
+				      $scope.categoryfunc();
+				      console.log(data);
+				    }).
+				    error(function(data, status, headers, config) {
+				    	console.log('load data error...');
+						$scope.cstatus = "Error...";
+						//setTimeout(function() { $('#myCheck').modal('hide'); }, 2000);
+				    });
+					
+
+				}
+			 	
+			 	// clear form
+			 	$scope.updateClear = function(){
+			 		
+			 		angular.element("#frmedit input[name='name']").val("");
+			 		angular.element("#frmedit input[name='description']").val("");
+	
+				}
+	
+			 	$scope.addClear = function(){
+			 		
+			 		angular.element("#frmadd input[name='name']").val("");
+			 		angular.element("#frmadd input[name='description']").val("");
+	
+				}
+
+
 		});
+
 	</script>
+
+
+
+
+
+	
 </div>
 <%@include file="include/footer.jsp" %>
 
