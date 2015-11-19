@@ -5,6 +5,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <%@include file="include/header.jsp"%>
+<%@include file="include/footer.jsp"%>
 <title>Insert title here</title>
 </head>
 <body>
@@ -23,12 +24,7 @@
 				<div class="col-sm-6">
 					<div class="form-group">
 					  <label for="cat">News-Cat</label>
-					  <select class="form-control" id="category" name="category">
-					    <option>1</option>
-					    <option>2</option>
-					    <option>3</option>
-					    <option>4</option>
-					  </select>
+					 <div id="cateoption"></div>
 					</div>
 				</div>
 				<div class="col-sm-6">
@@ -66,7 +62,7 @@
 				</div>
 				
 				<div class="col-sm-12">
-								<textarea name="contents" id="editor1">&lt;p&gt;Initial editor content.&lt;/p&gt;</textarea>
+								<textarea name="contents" id="contents">&lt;p&gt;Initial editor content.&lt;/p&gt;</textarea>
 
 								<script>
 									CKEDITOR
@@ -79,7 +75,9 @@
 								</script>
 				</div>
 			 	
-			 	<input type="submit" value="Insert" id="insertarticle" />
+			 	<div class="col-sm-12" style="padding-bottom:20px;">
+			 		<input type="button" onclick="insertArticle()" style='width:200px;height:50px;margin-top:5px; background:#388E3C;border:1px;color:white;font-size:25px;' value="Insert" id="insertarticle" />
+			 	</div>
 			</form>	
 			</fieldset>
 			
@@ -87,14 +85,43 @@
 		
 	
 </div>
-<%@include file="include/footer.jsp"%>
+
  <script>
-		//insertArticle();
-		//deleteArticle();
-		//updateArticle();
-		$("#formarticle").submit(function(event){
-			event.preventDefault();
+		var imagech=0;
+		getCategoty();
+		var id="${param.id}";
+	
+		if(!(id==null || id=="")){
+			requestArticle();
+			$("#insertarticle").attr("onclick","updateArticle("+id+")")
+							.val("Edit");
+		}
+		$("#image").change(function(){
+			imagech=1;
+		});
+		function getCategoty(){
 			
+			
+			  /*   <option>1</option>
+			    <option>2</option>
+			    <option>3</option>
+			    <option>4</option>
+			  </select> */
+			  $.ajax({
+					type: "GET",
+		            url: "${pageContext.request.contextPath}/api/category/listcategory", 
+		            success: function(data){ 
+		            	//var select=" <select class='form-control' id='category' name='category'>";
+		            	alert(data);
+		            },
+		            error: function(data){
+		            	alert("Unsuccess" + data);
+		            	console.log("ERROR..." + data);
+		            }
+				});
+		}
+		//requestArticle();
+		function insertArticle(){
 			var filename = $("#image").val().split('\\').pop();
 			json={
 					title : $("#title").val(),
@@ -108,58 +135,109 @@
 	            		id : $("#category").val()
 	            	}      	
 			}; 
-			
-			data1 = new FormData();
-			 data1.append('file', $('#image')[0].files[0]);
-			 data1.append('articledata',json);
-			
+		
 			$.ajax({
 				type: "POST",
-				contentType: "application/json",
+				contentType : "application/json",
 	            url: "insertarticle", 
-	            dataType: 'json',
-	            data : JSON.stringify(data1),
+	            data : JSON.stringify(json),
 	            success: function(data){ 
-	            	alert(data.MESSAGE);
+	            	alert(data);
+	            	uploadAImage();
 	            },
 	            error: function(data){
 	            	alert("Unsuccess" + data);
 	            	console.log("ERROR..." + data);
 	            }
 			});
-		});
-		function insertArticle(){
-			
 			
 		}
-		function updateArticle(){
+		function uploadAImage(){
+			var data1;
+		    data1 = new FormData($(this)[0]);
+		    data1.append('file', $('#image')[0].files[0]);
+			$.ajax({
+				url : "uploadarticleimage",
+				type : "POST",
+				cache: false,
+				contentType: false,
+				processData: false,
+				data : data1,
+				success:function(data){
+					
+					alert(1);
+				}
+			});
+		}
+		function requestArticle(){
+			
+			
+			$.ajax({
+				type : "GET",
+				url : "listarticle/"+id,
+				contentType: "application/json",
+		        dataType: 'json',
+		      
+		        success: function(data){
+		        	//alert(data.RESPONSE_DATA.title);
+		        	$("#title").val(data.RESPONSE_DATA.title);
+		        	$("#description").val(data.RESPONSE_DATA.description);
+		        	$("#contents").val(data.RESPONSE_DATA.contents);
+		        	$("#category").val(data.RESPONSE_DATA.category.id);
+		        	oldimage=data.RESPONSE_DATA.image;
+		        	$("#disimage").html("<img src='${pageContext.request.contextPath}/images/"+data.u_image+"' />");
+		        },
+		        error: function(data){
+	            	//alert("Unsuccess" + data);
+	            	console.log("ERROR..." + data);
+	            }
+		        
+			});
+		}
+		function updateArticle(id){
+			
+			var filename ;
+			alert(imagech);
+			if(imagech==0){
+				filename=oldimage;
+			}else{
+				alert(imagech);
+				filename=$("#image").val().split('\\').pop();
+			}
+			alert(filename);
+			
 			json={
-					id : 5,
-					title : "Hellosssssssssssssasdsfsfsaaaaaaaaaaaaasss",
-	            	description : "This is first",
-	            	image : "Tiger.jpg",
-	            	contents : "Shit just got real",
-	            	user : {
+					id : id,
+					title : $("#title").val(),
+	            	description : $("#description").val(),
+	            	image : filename,
+	            	contents : $("#contents").val(),
+	            	user : { 
 	            		uid : 1
 	            	},
 	            	category : {
-	            		id : 1
+	            		id : $("#category").val()
 	            	}      	
-			};
+			}; 
+			
+			
 			$.ajax({
 				type: "POST",
-	            url: "updatearticle",
-	            contentType: "application/json",
-	            dataType: 'json',
+				contentType : "application/json",
+	            url: "updatearticle", 
 	            data : JSON.stringify(json),
 	            success: function(data){ 
-	            	alert(data.MESSAGE);
+	            	
+	            	uploadAImage();
+	            	
+	            	location.href=""+data.REDIRECT;
 	            },
 	            error: function(data){
 	            	alert("Unsuccess" + data);
 	            	console.log("ERROR..." + data);
 	            }
 			});
+			
 		}
 		
 		
