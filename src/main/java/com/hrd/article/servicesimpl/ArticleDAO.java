@@ -26,8 +26,8 @@ public class ArticleDAO implements ArtitcleServices{
 
 	public List<ArticleDTO> listArticles(int pages, String key) {
 		int offset=(pages*10)-10;
-		return jdbcTemplate.query("SELECT * FROM tbnews n INNER JOIN tbuser u ON n.nuid=u.uid INNER JOIN tbcategory c ON c.cid=n.ncid WHERE UPPER(ncontents) LIKE UPPER(?) LIMIT 10 OFFSET ?",
-			   new Object[]{"%"+key+"%", offset}, new UserMapper());
+		return jdbcTemplate.query("SELECT * FROM tbnews 	n INNER JOIN tbuser u ON n.nuid=u.uid INNER JOIN tbcategory c ON c.cid=n.ncid WHERE UPPER(ntitle) LIKE UPPER(?) ORDER BY nid LIMIT 10 OFFSET ?",
+			   new Object[]{key+"%", offset}, new UserMapper());
 		
 	}
 
@@ -36,13 +36,13 @@ public class ArticleDAO implements ArtitcleServices{
 	}
 
 	public int updateArticle(ArticleDTO article) {
-		return jdbcTemplate.update("UPDATE tbnews SET ntitle=?, ndescription=?, ncontents=?, nimage=?, npostdate=?, nuid=?, ncid=? WHERE nid=?",
-			   article.getTitle(), article.getDescription(), article.getContents(), article.getImage(), article.getPostdate(), article.getUser().getUid(), article.getCategory().getId(), article.getId());
+		return jdbcTemplate.update("UPDATE tbnews SET ntitle=?, ndescription=?, ncontents=?, nimage=?, nuid=?, ncid=? WHERE nid=?",
+			   article.getTitle(), article.getDescription(), article.getContents(), article.getImage(),  article.getUser().getUid(), article.getCategory().getId(), article.getId());
 	}
 
 	public int insertArticle(ArticleDTO article) {
-		return jdbcTemplate.update("INSERT INTO tbnews(ntitle, ndescription, ncontents, nimage, npostdate, nuid, ncid) VALUES(?,?,?,?,?,?,?)", 
-				article.getTitle(), article.getDescription(), article.getContents(), article.getImage(), article.getPostdate(), article.getUser().getUid(), article.getCategory().getId());
+		return jdbcTemplate.update("INSERT INTO tbnews(ntitle, ndescription, ncontents, nimage, nuid, ncid) VALUES(?,?,?,?,?,?)", 
+				article.getTitle(), article.getDescription(), article.getContents(), article.getImage(), article.getUser().getUid(), article.getCategory().getId());
 	}
 
 	public int deleteArticle(int id) {
@@ -50,9 +50,12 @@ public class ArticleDAO implements ArtitcleServices{
 	}
 
 	public List<ArticleDTO> searchArticle(String key) {
-		return jdbcTemplate.query("SELECT * FROM tbnews n INNER JOIN tbuser u ON n.nuid=u.uid INNER JOIN tbcategory c ON c.cid=n.ncid WHERE UPPER(ncontents) LIKE UPPER(?)", new Object[]{"%"+key+"%"}, new UserMapper());
+		return jdbcTemplate.query("SELECT * FROM tbnews n INNER JOIN tbuser u ON n.nuid=u.uid INNER JOIN tbcategory c ON c.cid=n.ncid WHERE UPPER(ntitle) LIKE UPPER(?)", new Object[]{key+"%"}, new UserMapper());
 	}
-
+	
+	public int getArticleRow(String key) {
+		return jdbcTemplate.queryForObject("SELECT COUNT(nid) FROM tbnews WHERE LOWER(ntitle) LIKE ?",new Object[]{key+"%"}, int.class);
+	}
 	private static final class UserMapper implements RowMapper<ArticleDTO>{		
 		public ArticleDTO mapRow(ResultSet rs, int rowNumber) throws SQLException {
 			ArticleDTO article = new ArticleDTO();
@@ -77,4 +80,6 @@ public class ArticleDAO implements ArtitcleServices{
 			return article;
 		}
 	}
+
+	
 }
