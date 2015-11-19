@@ -58,8 +58,8 @@ public class UserDAO implements UserServices {
 		
 	}
 
-	public int countUser() {
-		return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM tbuser", Integer.class);
+	public int countUser(String key) {
+		return jdbcTemplate.queryForObject("SELECT COUNT(uid) FROM tbuser WHERE LOWER(uname) LIKE LOWER(?)",new Object[]{key+"%"}, int.class);
 	}
 
 	public UserDTO getUser(int id) {
@@ -80,5 +80,6 @@ public class UserDAO implements UserServices {
 			return user;
 		}
 	}
+
 
 }
