@@ -6,6 +6,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 		<title>Article Page</title>
 
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 		<script src= "http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
 		
@@ -123,10 +124,9 @@
 				<div class="a-row">
 					<div class="a-left-side">
 						<ul class="a-category">
-							<li id="myli" ng-click="add()"><i class="fa fa-tags"></i>All Categories</li>
+							<li><i class="fa fa-tags"></i>All Categories</li>
 							<li ng-repeat="category in categories" value="{{category.id}}"><i class="fa fa-angle-down"></i>{{category.name}}</li>
 						</ul>
-						<button id="mybtn">ADD</button>
 					</div><!--/end a-left-side  -->
 					
 					<div class="a-body">
@@ -143,8 +143,8 @@
 										<img src="{{article.image}}"/>
 									</div>
 									<div class="article-desc">
-										<h3>{{article.title}}</h3>
-										<p>{{article.description}}</p>
+											<h3>{{article.title}}</h3>
+											<p>{{article.description}}</p>
 									</div>
 								</div>
 								<div class="article-action">
@@ -169,25 +169,28 @@
 			
 		</div><!--/end main container  -->
 		
+		
+		
 		<script>
 			var app = angular.module('myApp', []);
-			app.controller('myCtrl', function($scope, $window){
+			app.controller('myCtrl', function($scope, $window, $http){
 				
 				$scope.categories = [{"id":"c01","name":"Technology"},{"id":"c02","name":"Health"},{"id":"c03","name":"Sports"},{"id":"c04","name":"Life"}];
+			
+				$scope.articles = [];
 				
-				var username = "PHEARUN";
-				var date = new Date().toUTCString();
-				var title = "CSS Selector Reference";
-				var image = "http://www.keenthemes.com/preview/metronic/theme/assets/global/plugins/jcrop/demos/demo_files/image1.jpg";
-				var desc = "In CSS, selectors are patterns used to select the element(s) you want to style. Use our CSS Selector Tester to demonstrate the different selectors.The \"CSS\" column indicates in which CSS version the property is defined (CSS1, CSS2, or CSS3).";
-				
-				$scope.articles = [{"title":title, "description":desc, "postdate":date,"user":{uimage:image,"uname":username}, "image":image}];
-
-				$scope.add = function(){
-					$scope.articles.push({"title":title, "description":desc, "postdate":date,"user":{uimage:image,"uname":username}, "image":image}); 
+				$scope.loadArticles = function(){
+					$http.get('article/listarticles').success(function (response) {
+				    	angular.forEach(response.RESPONSE_DATA, function(data, key) {
+				    		  $scope.articles.push(data);
+				    	});
+				    });
 				};
+					
+				$scope.loadArticles();
 				
 				angular.element($window).bind("scroll", function() {
+					
                     var windowHeight = "innerHeight" in window ? window.innerHeight: document.documentElement.offsetHeight;
                     var body = document.body, html = document.documentElement;
                     var docHeight = Math.max(body.scrollHeight,body.offsetHeight, html.clientHeight,html.scrollHeight, html.offsetHeight);
@@ -195,11 +198,22 @@
 
                     if (windowBottom >= docHeight) {
                     	console.log("reached the bottom..!");
-                    	$scope.add();
-                        console.log($scope.articles);
+                    	$scope.$apply($scope.loadArticles());
+                    	
+						/* angular.element('#myli').trigger('click'); */
+                        /* console.log($scope.articles); */
                     }
      	        });
+     	        
 			});
+			
+			/* $(window).scroll(function() {
+					  if($(window).scrollTop() + $(window).height() == $(document).height()) { //reached bottom   
+						console.log("reached...!");
+					  }
+			}); */
+			
+			
 		</script>
 	</body>
 </html>
