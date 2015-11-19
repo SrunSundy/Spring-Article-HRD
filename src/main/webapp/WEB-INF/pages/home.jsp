@@ -43,19 +43,36 @@
 				width: 205px;
 				margin-right: 10px;
 				background-color:#fff;
+				
+				/*fixed*/
+				position:fixed;
+				left:10%;
+				margin-top:60px;
+				
 			}
 			.a-body{
 				width: 570px;
 				margin-right: 10px;
+				
+				/*fixed */
+				position:relative;
+				left:20%;
+				z-index:4000;
 			}
 			.a-right-side{
 				width: 285px;
 				background-color:#fff;
+				
+				/*fixed*/
+				position:fixed;
+				right:10%;
+				margin-top:60px;
+				
 			}
-			.a-category{
+			.a-category, .a-popular{
 				list-style-type:none;
 			}
-			ul.a-category li:first-child{
+			ul.a-category li:first-child, ul.a-popular li:first-child{
 				background-color:#43A047;
 				color: #fff;
 				padding: 10px;
@@ -64,6 +81,7 @@
 				padding: 7px 10px 7px 30px;
 				border-bottom: 1px solid #dadada;
 			}
+			
 			.article-block{
 				width: 100%;
 			}
@@ -110,6 +128,20 @@
 			.fa{
 				padding-right: 5px;
 			}
+			.a-popular-item{
+				max-height: 70px;
+				overflow:hidden;
+				border-bottom: 1px solid #dadada;
+			}
+			.a-popular-item img{
+				width: 70px;
+				height: 70px;
+				padding: 5px;
+				float:left;
+			}
+			.a-popular-item p{
+				padding: 10px;
+			}
 		</style>
 		
 	</head>
@@ -133,7 +165,7 @@
 						<div class="article-block">
 							<div class="article-item" ng-repeat="article in articles">
 								<div class="article-info">
-									<img src="upload/{{article.user.uimage}}"/>
+									<img src="{{article.user.uimage}}"/>
 									<p>{{article.user.uname}}</p><br>
 									<pre>{{article.postdate | date:'medium'}}</pre>	
 									<div class="clear"></div>								
@@ -157,9 +189,15 @@
 					</div><!--/end a-body  -->
 					
 					<div class="a-right-side">
-						<ul class="a-category">
-							<li>Popular Articles</li>
-							<li ng-repeat="category in categories" value="{{category.id}}">{{category.name}}</li>
+						<ul class="a-popular">
+							<li><i class="fa fa-area-chart"></i>Popular Articles</li>
+							<li>
+								<div class="a-popular-item" ng-repeat="i in [1,2,3,4,5,6]">
+									<img src="https://cdn1.iconfinder.com/data/icons/user-pictures/100/boy-512.png"/>
+									<p>It's not the passion, is the concern, the worry. When I was 12 years old, I went to swim in a lake.</p>
+								</div>
+								<div class="clear"></div>
+							</li>
 						</ul>
 					</div><!--/end a-right-side  -->
 					
@@ -198,6 +236,10 @@
                         }
                     })
                     .success(function (response) {
+                    	if(response.RESPONSE_DATA.length==0){
+                    		console.log('no more article..!');
+							return;                    		
+                    	}
                     	angular.forEach(response.RESPONSE_DATA, function(data, key) {
 				    		  $scope.articles.push(data);
 				    	});
