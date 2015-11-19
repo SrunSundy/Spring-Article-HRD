@@ -135,7 +135,7 @@
 								<div class="article-info">
 									<img src="{{article.user.uimage}}"/>
 									<p>{{article.user.uname}}</p><br>
-									<pre>{{article.postdate}}</pre>	
+									<pre>{{article.postdate | date:'medium'}}</pre>	
 									<div class="clear"></div>								
 								</div>
 								<div class="article-components">
@@ -175,45 +175,41 @@
 			var app = angular.module('myApp', []);
 			app.controller('myCtrl', function($scope, $window, $http){
 				
-				$scope.categories = [{"id":"c01","name":"Technology"},{"id":"c02","name":"Health"},{"id":"c03","name":"Sports"},{"id":"c04","name":"Life"}];
-			
 				$scope.articles = [];
+				$scope.categories = [];
+				
+				$scope.loadCategories = function(){
+					$http.get('category/listcategory').success(function (response) {
+				    	angular.forEach(response.RESPONSE_DATA, function(data, key) {
+				    		  $scope.categories.push(data);
+				    	});
+				    });
+				};
 				
 				$scope.loadArticles = function(){
-					$http.get('article/listarticles').success(function (response) {
+					$http.get('admin/displayarticlepage').success(function (response) {
 				    	angular.forEach(response.RESPONSE_DATA, function(data, key) {
 				    		  $scope.articles.push(data);
 				    	});
 				    });
 				};
 					
+				$scope.loadCategories();
 				$scope.loadArticles();
 				
 				angular.element($window).bind("scroll", function() {
-					
                     var windowHeight = "innerHeight" in window ? window.innerHeight: document.documentElement.offsetHeight;
                     var body = document.body, html = document.documentElement;
                     var docHeight = Math.max(body.scrollHeight,body.offsetHeight, html.clientHeight,html.scrollHeight, html.offsetHeight);
                     windowBottom = windowHeight + window.pageYOffset;
 
                     if (windowBottom >= docHeight) {
-                    	console.log("reached the bottom..!");
                     	$scope.$apply($scope.loadArticles());
-                    	
-						/* angular.element('#myli').trigger('click'); */
-                        /* console.log($scope.articles); */
                     }
      	        });
      	        
 			});
-			
-			/* $(window).scroll(function() {
-					  if($(window).scrollTop() + $(window).height() == $(document).height()) { //reached bottom   
-						console.log("reached...!");
-					  }
-			}); */
-			
-			
+		
 		</script>
 	</body>
 </html>
