@@ -110,7 +110,7 @@ public class CategoryRestController {
 		if ( !list.isEmpty() ){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK);
-			map.put("RESPONSE_RESPONSE_DATA" , list);
+			map.put("RESPONSE_DATA" , list);
 			return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
 		}
 		map.put("MESSAGE", "FAIL");
