@@ -47,7 +47,7 @@
 				/*fixed*/
 				position:fixed;
 				left:10%;
-				margin-top:60px;
+				top:60px;
 				
 			}
 			.a-body{
@@ -66,7 +66,7 @@
 				/*fixed*/
 				position:fixed;
 				right:10%;
-				margin-top:60px;
+				top:60px;
 				
 			}
 			.a-category, .a-popular{
@@ -161,7 +161,7 @@
 				padding: 10px;
 			}
 			.d-body{
-				min-height:500px
+				min-height:1000px
 			}
 			.d-body img{
 				width: 100%;
@@ -196,7 +196,7 @@
 						<div class="a-detail">
 							<div class="d-title">
 								<p>{{article.title}}</p>
-								<pre>{{article.postdate}}</pre>
+								<pre>{{article.postdate |date:'medium'}}</pre>
 							</div>	
 							<div class="d-body">
 								{{article.contents}}

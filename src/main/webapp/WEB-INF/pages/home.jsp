@@ -47,7 +47,7 @@
 				/*fixed*/
 				position:fixed;
 				left:10%;
-				margin-top:60px;
+				top:60px;
 				
 			}
 			.a-body{
@@ -66,7 +66,7 @@
 				/*fixed*/
 				position:fixed;
 				right:10%;
-				margin-top:60px;
+				top:60px;
 				
 			}
 			.a-category, .a-popular{
@@ -150,6 +150,13 @@
 			.a-popular-item p{
 				padding: 10px;
 			}
+			a{
+				text-decoration:none;
+			}
+			a, a:hover, a:active{
+				color:black;
+			}
+			
 		</style>
 		
 	</head>
@@ -174,17 +181,17 @@
 							<div class="article-item" ng-repeat="article in articles">
 								<div class="article-info">
 									<img ng-click="articleUser(article.user.uid)" src="{{article.user.uimage}}"/>
-									<p ng-click="articleUser(article.user.uid)">{{article.user.uname}}</p><br>
+									<p ng-click="articleUser(article.user.uid)">{{article.user.uname | uppercase}}</p><br>
 									<pre>{{article.postdate | date:'medium'}}</pre>	
 									<div class="clear"></div>								
 								</div>
 								<div class="article-components">
 									<div class="article-image">
-										<a href="admin/listarticle/{{article.id}}" target="_blank"><img src="{{article.image}}"/></a>
+										<a href="detail/{{article.id}}" target="_blank"><img src="{{article.image}}"/></a>
 									</div>
 									<div class="article-desc">
-											<h3><a href="admin/listarticle/{{article.id}}" target="_blank">{{article.title}}</a></h3>
-											<p><a href="admin/listarticle/{{article.id}}" target="_blank">{{article.description}}</a></p>
+											<h3><a href="detail/{{article.id}}" target="_blank">{{article.title}}</a></h3>
+											<p><a href="detail/{{article.id}}" target="_blank">{{article.description | limitTo:200}}</a></p>
 									</div>
 								</div>
 								<div class="article-action">
