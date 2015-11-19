@@ -133,18 +133,18 @@
 						<div class="article-block">
 							<div class="article-item" ng-repeat="article in articles">
 								<div class="article-info">
-									<img src="{{article.user.uimage}}"/>
+									<img src="upload/{{article.user.uimage}}"/>
 									<p>{{article.user.uname}}</p><br>
 									<pre>{{article.postdate | date:'medium'}}</pre>	
 									<div class="clear"></div>								
 								</div>
 								<div class="article-components">
 									<div class="article-image">
-										<img src="{{article.image}}"/>
+										<a href="admin/listarticle/{{article.id}}" target="_blank"><img src="{{article.image}}"/></a>
 									</div>
 									<div class="article-desc">
-											<h3>{{article.title}}</h3>
-											<p>{{article.description}}</p>
+											<h3><a href="admin/listarticle/{{article.id}}" target="_blank">{{article.title}}</a></h3>
+											<p><a href="admin/listarticle/{{article.id}}" target="_blank">{{article.description}}</a></p>
 									</div>
 								</div>
 								<div class="article-action">
@@ -177,6 +177,7 @@
 				
 				$scope.articles = [];
 				$scope.categories = [];
+				$scope.page = 0;
 				
 				$scope.loadCategories = function(){
 					$http.get('category/listcategory').success(function (response) {
@@ -187,8 +188,17 @@
 				};
 				
 				$scope.loadArticles = function(){
-					$http.get('admin/displayarticlepage').success(function (response) {
-				    	angular.forEach(response.RESPONSE_DATA, function(data, key) {
+					$scope.page += 1;
+					$http({
+                        method: "POST",
+                        url: "admin/displayarticlepage",
+                        params: {
+                            acontent: "",
+                            page:$scope.page
+                        }
+                    })
+                    .success(function (response) {
+                    	angular.forEach(response.RESPONSE_DATA, function(data, key) {
 				    		  $scope.articles.push(data);
 				    	});
 				    });
