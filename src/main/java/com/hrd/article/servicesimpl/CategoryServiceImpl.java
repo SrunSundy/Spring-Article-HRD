@@ -37,7 +37,7 @@ public class CategoryServiceImpl implements CategoryService{
 	public List<CategoryDTO> listCategory() {
 		List<CategoryDTO> lst = new ArrayList<CategoryDTO>();
 		
-		String sql = "SELECT cid, cname, cdescription, cstatus FROM tbcategory;";
+		String sql = "SELECT cid, cname, cdescription, cstatus FROM tbcategory ORDER BY cid DESC;";
 		lst = jdbcTemplate.query(sql , new CategoryRowMapper());
 		if ( !lst.isEmpty() ){
 			return lst;
@@ -50,7 +50,7 @@ public class CategoryServiceImpl implements CategoryService{
 	 */
 	public CategoryDTO getCategory(int id) {
 		
-		String sql = "SELECT cid, cname, cdescription, cstatus FROM tbcategory WHERE cid = ? ;";
+		String sql = "SELECT cid, cname, cdescription, cstatus FROM tbcategory WHERE cid = ? ORDER BY cid DESC;";
 		Object[] obj = { id };
 		CategoryDTO category;
 		category = jdbcTemplate.query(sql , obj, new CategoryResultSetExtractor());
@@ -130,7 +130,7 @@ public class CategoryServiceImpl implements CategoryService{
 	public List<CategoryDTO> searchCategoryByName(String name) {
 		List<CategoryDTO> lst = new ArrayList<CategoryDTO>();
 		
-		String sql = "SELECT cid, cname, cdescription, cstatus FROM tbcategory WHERE cname like ?;";
+		String sql = "SELECT cid, cname, cdescription, cstatus FROM tbcategory WHERE cname like ? ORDER BY cid DESC;";
 		Object[] obj = { "%"+name+"%" };
 		lst = jdbcTemplate.query(sql ,obj, new CategoryRowMapper());
 		if ( !lst.isEmpty() ){
