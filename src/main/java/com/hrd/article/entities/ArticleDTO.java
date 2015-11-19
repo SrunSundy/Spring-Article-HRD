@@ -1,6 +1,6 @@
 package com.hrd.article.entities;
 
-import java.sql.Date;
+import java.util.Date;
 
 public class ArticleDTO {
 	private int id;
@@ -26,6 +26,12 @@ public class ArticleDTO {
 	}
 	public String getDescription() {
 		return description;
+	}
+	@Override
+	public String toString() {
+		return "ArticleDTO [id=" + id + ", title=" + title + ", description=" + description + ", image=" + image
+				+ ", contents=" + contents + ", postdate=" + postdate + ", status=" + status + ", user=" + user
+				+ ", category=" + category + "]";
 	}
 	public void setDescription(String description) {
 		this.description = description;
