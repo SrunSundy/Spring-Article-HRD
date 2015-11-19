@@ -43,7 +43,7 @@
 								<option value="50">50</option>
 								<option value="100">100</option>
 							</select>
-							<span class="searchresult "  style="">Result : <span id="rowshow"></span>/<span id="recordresult"></span></span>
+							<span class="searchresult " >Result : <span id="rowshow"></span>/<span id="recordresult"></span></span>
 						</div>
 						</div>
 					</div>
