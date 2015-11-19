@@ -5,28 +5,20 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 
-<link rel="stylesheet" href="${pageContext.request.contextPath}/bootstrape/css/bootstrap.min.css">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/css/simple-sidebar.css">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/css/fixedbar.css">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/fontawesome/css/font-awesome.min.css">
-
-
-<script src="${pageContext.request.contextPath}/js/jquery.js"></script>
-<script src="${pageContext.request.contextPath}/bootstrape/js/bootstrap.min.js"></script>
-
+<%@include file="include/header.jsp" %>
 <title>Insert title here</title>
 </head>
 <body>
-	<%@include file="../fixedbar/topmenu.jsp"%>
+	<%@include file="include/topmenu.jsp"%>
 	
 
 
 <div id="wrapper" style="margin-top: 54px;">
-<%@include file="../fixedbar/leftbar.jsp"%>
+<%@include file="include/leftbar.jsp"%>
 	
 	<h1> WELCOME CATEGORY PAGE! </h1>
 </div>
+<%@include file="include/footer.jsp" %>
  <script>
 		//insertArticle();
 		//deleteArticle();

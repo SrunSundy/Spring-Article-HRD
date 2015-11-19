@@ -5,19 +5,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 
-<link rel="stylesheet" href="${pageContext.request.contextPath}/bootstrape/css/bootstrap.min.css">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/css/simple-sidebar.css">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/css/fixedbar.css">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/fontawesome/css/font-awesome.min.css">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/jasny-bootstrap/css/jasny-bootstrap.min.css">
+<%@include file="include/header.jsp" %>
 
-
-<script src="${pageContext.request.contextPath}/js/jquery.js"></script>
-<script src="${pageContext.request.contextPath}/bootstrape/js/bootstrap.min.js"></script>
- <script src="${pageContext.request.contextPath}/jasny-bootstrap/js/jasny-bootstrap.min.js"></script>
- <script src="${pageContext.request.contextPath}/ckeditor/ckeditor.js"></script>
-<script src="${pageContext.request.contextPath}/js/jquery.bootpag.min.js"></script>
 <title>Insert title here</title>
 
 <style>
@@ -35,10 +24,10 @@
 </head>
 <body>
       	
-	<%@include file="../fixedbar/topmenu.jsp"%>
+	<%@include file="include/topmenu.jsp"%>
 
 <div id="wrapper" style="margin-top: 54px;">
-<%@include file="../fixedbar/leftbar.jsp"%>
+<%@include file="include/leftbar.jsp"%>
 		<div style="height:20px;"  class="col-sm-12"></div>
 		
 		<div id="content" class="col-sm-12">
@@ -79,6 +68,7 @@
 		
 	
 </div>
+<%@include file="include/footer.jsp" %>
  <script>
 		//insertArticle();
 		//deleteArticle();
