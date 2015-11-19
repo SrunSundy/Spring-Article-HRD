@@ -101,18 +101,16 @@
 		});
 		function getCategoty(){
 			
-			
-			  /*   <option>1</option>
-			    <option>2</option>
-			    <option>3</option>
-			    <option>4</option>
-			  </select> */
 			  $.ajax({
 					type: "GET",
-		            url: "${pageContext.request.contextPath}/api/category/listcategory", 
+		            url: "${pageContext.request.contextPath}/category/listcategory", 
 		            success: function(data){ 
-		            	//var select=" <select class='form-control' id='category' name='category'>";
-		            	alert(data);
+		            	var select=" <select class='form-control' id='category' name='category'>";
+		            	for(var i=0;i<data.RESPONSE_DATA.length;i++){
+		            		select+="<option value='"+data.RESPONSE_DATA[i].id+"'>"+data.RESPONSE_DATA[i].name+"</option>";
+		            	}
+		            	select+=" </select>";
+		            	$("#cateoption").html(select);
 		            },
 		            error: function(data){
 		            	alert("Unsuccess" + data);
