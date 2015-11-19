@@ -154,17 +154,18 @@ public class CategoryServiceImpl implements CategoryService{
 	 */
 		public boolean isStatus(int id,int status) {
 			String sql = "UPDATE tbcategory SET cstatus = ? WHERE cid = ? ;";
-			
+			int status_update = 0 ;
 			if ( status == 0){
-				status = 0;
-			}else {
-				status = 1;
+				status_update = 1;
+			}
+			if ( status == 1){
+				status_update = 0;
 			}
 			
 			System.out.println("id is: "+id);
-			System.out.println("status is: "+ status);
+			System.out.println("status is: "+ status_update);
 			
-			Object[] obj = { status , id };
+			Object[] obj = { status_update , id };
 			
 			int result = jdbcTemplate.update(sql, obj);
 			if ( result > 0 ){
