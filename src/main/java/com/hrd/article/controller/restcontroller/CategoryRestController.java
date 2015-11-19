@@ -18,7 +18,7 @@ import com.hrd.article.entities.CategoryDTO;
 import com.hrd.article.services.CategoryService;
 
 @RestController
-@RequestMapping("/api/category")
+@RequestMapping("/category")
 public class CategoryRestController {
 	
 	@Autowired
@@ -110,12 +110,12 @@ public class CategoryRestController {
 		if ( !list.isEmpty() ){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK);
-			map.put("DATA" , list);
+			map.put("RESPONSE_RESPONSE_DATA" , list);
 			return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
 		}
 		map.put("MESSAGE", "FAIL");
 		map.put("STATUS", HttpStatus.NOT_FOUND);
-		map.put("DATA", null);
+		map.put("RESPONSE_DATA", null);
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND);
 	}
 	
@@ -131,12 +131,12 @@ public class CategoryRestController {
 		if ( category != null ){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK);
-			map.put("DATA" , category);
+			map.put("RESPONSE_DATA" , category);
 			return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
 		}
 		map.put("MESSAGE", "FAIL");
 		map.put("STATUS", HttpStatus.NOT_FOUND);
-		map.put("DATA", null);
+		map.put("RESPONSE_DATA", null);
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND);
 	}
 	
@@ -152,12 +152,12 @@ public class CategoryRestController {
 		if ( !list.isEmpty()){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("STATUS", HttpStatus.OK);
-			map.put("DATA" , list);
+			map.put("RESPONSE_DATA" , list);
 			return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
 		}
 		map.put("MESSAGE", "FAIL");
 		map.put("STATUS", HttpStatus.NOT_FOUND);
-		map.put("DATA", null);
+		map.put("RESPONSE_DATA", null);
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND);
 	}
 	
