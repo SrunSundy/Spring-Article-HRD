@@ -77,6 +77,11 @@
 				color: #fff;
 				padding: 10px;
 			}
+			
+			ul.a-category li:hover{
+				background-color:#dadada;
+				cursor:pointer;
+			}
 			.a-category li:not(first-child){
 				padding: 7px 10px 7px 30px;
 				border-bottom: 1px solid #dadada;
@@ -115,6 +120,9 @@
 			}
 			.article-info p{
 				float:left;
+			}
+			.article-info img:hover ,.article-info p:hover{
+				cursor:pointer;
 			}
 			.article-info pre{
 				margin-top: 7px;
@@ -157,7 +165,7 @@
 					<div class="a-left-side">
 						<ul class="a-category">
 							<li><i class="fa fa-tags"></i>All Categories</li>
-							<li ng-repeat="category in categories" value="{{category.id}}"><i class="fa fa-angle-down"></i>{{category.name}}</li>
+							<li ng-repeat="category in categories" ng-click="articleCategory(category.id)" value="{{category.id}}"><i class="fa fa-angle-down"></i>{{category.name}}</li>
 						</ul>
 					</div><!--/end a-left-side  -->
 					
@@ -165,8 +173,8 @@
 						<div class="article-block">
 							<div class="article-item" ng-repeat="article in articles">
 								<div class="article-info">
-									<img src="{{article.user.uimage}}"/>
-									<p>{{article.user.uname}}</p><br>
+									<img ng-click="articleUser(article.user.uid)" src="{{article.user.uimage}}"/>
+									<p ng-click="articleUser(article.user.uid)">{{article.user.uname}}</p><br>
 									<pre>{{article.postdate | date:'medium'}}</pre>	
 									<div class="clear"></div>								
 								</div>
@@ -191,12 +199,12 @@
 					<div class="a-right-side">
 						<ul class="a-popular">
 							<li><i class="fa fa-area-chart"></i>Popular Articles</li>
-							<li>
-								<div class="a-popular-item" ng-repeat="i in [1,2,3,4,5,6]">
+							<li ng-repeat="i in [1,2,3,4,5,6]">
+								<div class="a-popular-item">
 									<img src="https://cdn1.iconfinder.com/data/icons/user-pictures/100/boy-512.png"/>
 									<p>It's not the passion, is the concern, the worry. When I was 12 years old, I went to swim in a lake.</p>
+									<div class="clear"></div>
 								</div>
-								<div class="clear"></div>
 							</li>
 						</ul>
 					</div><!--/end a-right-side  -->
@@ -215,6 +223,8 @@
 				
 				$scope.articles = [];
 				$scope.categories = [];
+				$scope.populars = [];
+				
 				$scope.page = 0;
 				
 				$scope.loadCategories = function(){
@@ -259,7 +269,20 @@
                     	$scope.$apply($scope.loadArticles());
                     }
      	        });
-     	        
+     	    	
+				$scope.loadPopulars = function(){
+						
+				};
+				
+				$scope.articleCategory = function(id){
+					alert(id);
+					$scope.articles = [];
+				};
+				
+				$scope.articleUser = function(id){
+					alert(id);
+					$scope.articles = [];
+				};
 			});
 		
 		</script>
