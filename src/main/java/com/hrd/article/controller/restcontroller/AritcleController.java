@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -22,10 +23,8 @@ import com.hrd.article.services.ArtitcleServices;
 @RequestMapping("/admin")
 public class AritcleController {
 	
-	
 	@Autowired
 	private ArtitcleServices articleservice;
-	
 	
 	@RequestMapping(value="/listarticles", method=RequestMethod.GET)
 	public ResponseEntity<Map<String,Object>> listArticles(){
@@ -36,7 +35,7 @@ public class AritcleController {
 			map.put("MESSAGE", "ARTICLE NOT FOUND...");
 			return new ResponseEntity<Map<String,Object>>
 										(map,HttpStatus.NOT_FOUND);
-		}
+		}	
 		map.put("STATUS", HttpStatus.OK.value());
 		map.put("MESSAGE", "ARITCLE HAS BEEN FOUNDS");
 		map.put("RESPONSE_DATA",articles);
@@ -44,8 +43,8 @@ public class AritcleController {
 									(map,HttpStatus.OK);	
 	}
 	
-	@RequestMapping(value="/listarticle", method=RequestMethod.GET)
-	public ResponseEntity<Map<String,Object>> listArticle(@RequestParam("articleid") int id ){
+	@RequestMapping(value="/listarticle/{articleid}", method=RequestMethod.GET)
+	public ResponseEntity<Map<String,Object>> listArticle(@PathVariable("articleid") int id ){
 		System.err.println(articleservice.listArticle(id));
 		ArticleDTO article= articleservice.listArticle(id);
 		Map<String, Object> map = new HashMap<String,Object>();
@@ -135,6 +134,7 @@ public class AritcleController {
 	
 	@RequestMapping(value="/displayarticlepage", method= RequestMethod.POST )
 	public ResponseEntity<Map<String,Object>> getArticlePage(@RequestParam("acontent") String word,@RequestParam("page") int page){
+	
 		System.err.print("sdfdfsdfsf");
 		List<ArticleDTO> articles = articleservice.listArticles(page,word);
 		Map<String, Object> map = new HashMap<String,Object>();
