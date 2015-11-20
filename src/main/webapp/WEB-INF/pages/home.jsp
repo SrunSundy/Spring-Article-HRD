@@ -83,6 +83,8 @@
 				$scope.articles = [];
 				$scope.categories = [];
 				$scope.populars = [];
+				$scope.navCategory = [];
+				
 				
 				$scope.uid = 0;
 				$scope.cid = 0;
@@ -93,6 +95,8 @@
 					$http.get('category/listcategory').success(function (response) {
 				    	angular.forEach(response.RESPONSE_DATA, function(data, key) {
 				    		  $scope.categories.push(data);
+				    		  if(key<5)
+				    		  	$scope.navCategory.push(data);
 				    	});
 				    });
 				};

@@ -49,8 +49,8 @@
 							<li><i class="fa fa-area-chart"></i>Popular Articles</li>
 							<li ng-repeat="popular in populars">
 								<div class="a-popular-item">
-									<a href="detail/{{popular.id}}" target="_blank"><img src="{{popular.image}}"/></a>
-									<p><a href="detail/{{popular.id}}" target="_blank">{{popular.title}}</a></p>
+									<a href="../detail/{{popular.id}}" target="_blank"><img src="{{popular.image}}"/></a>
+									<p><a href="../detail/{{popular.id}}" target="_blank">{{popular.title}}</a></p>
 									<div class="clear"></div>
 								</div>
 							</li>
@@ -72,11 +72,14 @@
 				$scope.categories = [];
 				$scope.populars = [];
 				$scope.article = {};
+				$scope.navCategory = [];
 				
 				$scope.loadCategories = function(){
 					$http.get('../category/listcategory').success(function (response) {
 				    	angular.forEach(response.RESPONSE_DATA, function(data, key) {
 				    		  $scope.categories.push(data);
+				    		  if(key<5)
+					    		  $scope.navCategory.push(data);
 				    	});
 				    });
 				};
