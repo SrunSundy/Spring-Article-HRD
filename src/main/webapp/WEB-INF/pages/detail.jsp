@@ -36,7 +36,7 @@
 							</div>	
 							<div class="d-body">
 								{{article.contents}}
-								<br><br><pre>Poster : {{article.poster | uppercase}}</pre>
+								<br><br><pre>Author : {{article.poster | uppercase}}</pre>
 							</div>
 							<div class="a-share">
 								<pre><span>Facebook</span><span>    Youtube</span><span>   Twitter</span></pre>
