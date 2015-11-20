@@ -47,10 +47,10 @@
 					<div class="a-right-side">
 						<ul class="a-popular">
 							<li><i class="fa fa-area-chart"></i>Popular Articles</li>
-							<li ng-repeat="i in [1,2,3,4,5,6]">
+							<li ng-repeat="popular in populars">
 								<div class="a-popular-item">
-									<img src="https://cdn1.iconfinder.com/data/icons/user-pictures/100/boy-512.png"/>
-									<p>It's not the passion, is the concern, the worry. When I was 12 years old, I went to swim in a lake.</p>
+									<a href="detail/{{popular.id}}" target="_blank"><img src="{{popular.image}}"/></a>
+									<p><a href="detail/{{popular.id}}" target="_blank">{{popular.title}}</a></p>
 									<div class="clear"></div>
 								</div>
 							</li>
@@ -93,9 +93,25 @@
 				$scope.loadCategories();
 				
 				$scope.loadPopulars = function(){
-				
+					$http({
+                        method: "POST",
+                        url: "../admin/listarticles",
+                        params: {
+                            key: "",
+                            page:1,
+                            uid:0,
+                            cid:0
+                        }
+                    })
+                    .success(function (response) {
+                    	angular.forEach(response.RESPONSE_DATA, function(data, key) {
+				    		if(key>5) return;  
+                    		$scope.populars.push(data);
+				    	});
+                    	console.log($scope.populars);
+				    });
 				};
-				
+				$scope.loadPopulars();
 			});
 		
 		</script>

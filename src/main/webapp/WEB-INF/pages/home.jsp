@@ -58,10 +58,10 @@
 					<div class="a-right-side">
 						<ul class="a-popular">
 							<li><i class="fa fa-area-chart"></i>Popular Articles</li>
-							<li ng-repeat="i in [1,2,3,4,5,6]">
+							<li ng-repeat="popular in populars">
 								<div class="a-popular-item">
-									<img src="https://cdn2.iconfinder.com/data/icons/agriculture-1/512/care-512.png"/>
-									<p>It's not the passion, is the concern, the worry. When I was 12 years old, I went to swim in a lake.</p>
+									<a href="detail/{{popular.id}}" target="_blank"><img src="{{popular.image}}"/></a>
+									<p><a href="detail/{{popular.id}}" target="_blank">{{popular.title}}</a></p>
 									<div class="clear"></div>
 								</div>
 							</li>
@@ -87,6 +87,7 @@
 				$scope.uid = 0;
 				$scope.cid = 0;
 				$scope.page = 0;
+				$scope.key = "";
 				
 				$scope.loadCategories = function(){
 					$http.get('category/listcategory').success(function (response) {
@@ -102,7 +103,7 @@
                         method: "POST",
                         url: "admin/listarticles",
                         params: {
-                            key: "",
+                            key: $scope.key,
                             page:$scope.page,
                             uid:$scope.uid,
                             cid:$scope.cid
@@ -134,12 +135,30 @@
      	        });
      	    	
 				$scope.loadPopulars = function(){
+					$http({
+                        method: "POST",
+                        url: "admin/listarticles",
+                        params: {
+                            key: "",
+                            page:1,
+                            uid:0,
+                            cid:0
+                        }
+                    })
+                    .success(function (response) {
+                    	angular.forEach(response.RESPONSE_DATA, function(data, key) {
+				    		if(key>5) return;  
+                    		$scope.populars.push(data);
+				    	});
+                    	console.log($scope.populars);
+				    });
 				};
+				$scope.loadPopulars();
 				
 				$scope.articleCategory = function(cid){
 					$scope.page = 0;
 					$scope.uid = 0;
-					$scope.cid = cid
+					$scope.cid = cid;
 					$scope.articles = [];
 					
 					$scope.loadArticles();
@@ -148,12 +167,21 @@
 				$scope.articleUser = function(uid){
 					$scope.page = 0;
 					$scope.uid = uid;
-					$scope.cid = 0
+					$scope.cid = 0;
 					$scope.articles = [];
 					
 					$scope.loadArticles();
 				};
 				
+				$scope.searchArticles = function(){
+					$scope.page = 0;
+					$scope.uid = 0;
+					$scope.cid = 0;
+					
+					$scope.articles = [];
+					
+					$scope.loadArticles();
+				}
 			});
 		
 		</script>
