@@ -70,7 +70,7 @@ ul.a-category li:first-child, ul.a-popular li:first-child {
 	padding: 10px;
 }
 
-ul.a-category li:hover {
+ul.a-category li:hover{
 	background-color: #dadada;
 	cursor: pointer;
 }
