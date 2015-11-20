@@ -32,7 +32,7 @@
 
 <%@include file="include/leftbar.jsp"%>
 
-	<div class="container" ng-app="myApp" ng-controller="myCtrl" >
+	<div class="col-sm-12" ng-app="myApp" ng-controller="myCtrl" >
 	    
 		<h1> WELCOME CATEGORY PAGE</h1>
 		
@@ -257,7 +257,7 @@
 			   
 			   // Load list category			   
 			   $scope.categoryfunc = function(){
-				  $http.get('http://localhost:8080/Spring-Article-HRD/category/listcategory')
+				  $http.get('${pageContext.request.contextPath}/category/listcategory')
 				  .success(function(data, status, headers, config) {
 					  
 				      $scope.category = data;
@@ -277,7 +277,7 @@
 			   $scope.description = "";
 			   //view category by id
 			 	$scope.viewCategory = function(id){
-					$http.get('http://localhost:8080/Spring-Article-HRD/category/getcategory/'+id).
+					$http.get('${pageContext.request.contextPath}/category/getcategory/'+id).
 				    success(function(data, status, headers, config) {
 
 				      console.log(data);
@@ -314,7 +314,7 @@
 							"name" : angular.element("#frmedit input[name='name']").val(),
 							"description" : angular.element("#frmedit input[name='description']").val()
 					};	
-					$http.put('http://localhost:8080/Spring-Article-HRD/category/updatecategory',dataObj).
+					$http.put('${pageContext.request.contextPath}/category/updatecategory',dataObj).
 				    success(function(data, status, headers, config) {
 				      console.log(data);
 				   
@@ -343,7 +343,7 @@
 							"name" : angular.element("#frmadd input[name='name']").val(),
 							"description" : angular.element("#frmadd input[name='description']").val()
 					};	
-					$http.post('http://localhost:8080/Spring-Article-HRD/category/addcategory',dataObj).
+					$http.post('${pageContext.request.contextPath}/category/addcategory',dataObj).
 				    success(function(data, status, headers, config) {
 				      console.log(data);
 				      
@@ -376,7 +376,7 @@
 			 		}
 			 		
 			 		$timeout(function() { angular.element('#myCheck').modal('hide'); }, 2000);	
-					$http.put('http://localhost:8080/Spring-Article-HRD/category/statuscategory/'+id+'/'+status).
+					$http.put('${pageContext.request.contextPath}/category/statuscategory/'+id+'/'+status).
 				    success(function(data, status, headers, config) {
 				    	
 				      	
