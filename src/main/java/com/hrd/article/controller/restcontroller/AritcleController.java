@@ -152,4 +152,17 @@ public class AritcleController {
 	}
 	
 	
+	//phearun controller
+	@RequestMapping(value="/listarticles", method=RequestMethod.POST)
+	public ResponseEntity<Map<String,Object>> listArticles(@RequestParam("key") String key,@RequestParam("page") int page, @RequestParam("uid") int uid, @RequestParam("cid") int cid){
+		List<ArticleDTO> articles = articleservice.listArticles(key,page,uid,cid);
+		Map<String, Object> map = new HashMap<String,Object>();
+		
+		map.put("STATUS", HttpStatus.OK.value());
+		map.put("MESSAGE", "ARITCLE HAS BEEN FOUNDS");
+		map.put("RESPONSE_DATA",articles);
+		return new ResponseEntity<Map<String,Object>>
+									(map,HttpStatus.OK);	
+	}
+	
 }
