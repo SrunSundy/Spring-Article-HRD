@@ -15,5 +15,7 @@ public interface ArtitcleServices {
 
 	public int getArticleRow(String key);
 	
+	public List<ArticleDTO> listArticles(String key,int pages, int uid, int cid);
+	
 	
 }
