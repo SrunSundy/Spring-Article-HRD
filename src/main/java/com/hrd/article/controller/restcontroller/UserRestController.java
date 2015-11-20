@@ -34,21 +34,11 @@ public class UserRestController {
 	
 	//list user
 	@RequestMapping(value="/getalluser",method=RequestMethod.POST)
-	public ResponseEntity<Map<String, Object>> listUser(@RequestBody String info ) throws ParseException {
-		
-		//for get data from json string
-		JSONParser jsonParser = new JSONParser();
-		JSONObject jsonObject = (JSONObject) jsonParser.parse(info);
-		// get a String from the JSON object
-		String Page = (String) jsonObject.get("page");
-		int Pages=Integer.parseInt(Page);
-		String Key = (String) jsonObject.get("key");
-	
+	public ResponseEntity<Map<String, Object>> listUser(@RequestParam("page") int p,@RequestParam("key") String k)  {
 
-		
-		List<UserDTO> list = userService.listUser(Pages,Key);
+		List<UserDTO> list = userService.listUser(p,k);
 		Map<String, Object> map = new HashMap<String, Object>();
-		if (list.isEmpty()) {
+		if (list.size()<0) {			
 			map.put("STATUS", HttpStatus.NOT_FOUND.value());
 			map.put("MESSAGE", "USER HAS BEEN NOT FOUNDS");
 			return new ResponseEntity<Map<String, Object>>(map, HttpStatus.NOT_FOUND);
@@ -190,4 +180,33 @@ public class UserRestController {
 		System.out.println("user has been edit successfully.....!");
 		return new ResponseEntity<String>("SUCCESS",HttpStatus.OK);
 	}
+	
+	//get user count
+	@RequestMapping(value="usercount",method =RequestMethod.POST)
+	public ResponseEntity<Map<String,Object>> getUserCount(@RequestParam("acontent") String word){
+		Map<String, Object> map  = new HashMap<String, Object>();
+		int userrow=userService.countUser(word);
+			map.put("MESSAGE","ARITCLE ROW");
+			map.put("STATUS", HttpStatus.OK.value());
+			map.put("RESPONSE_DATA", userrow);
+			return new ResponseEntity<Map<String,Object>>
+								(map, HttpStatus.OK);
+		
+	} 
+	//enable user status
+	@RequestMapping(value="enableuserstatus",method=RequestMethod.POST)
+	public ResponseEntity<String> enableUserStatus(@RequestParam("id")  int id) {
+		if (userService.enableUser(id)==0){
+			return new ResponseEntity<String>("UNSUCCESS",HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<String>("SUCCESS",HttpStatus.OK);
+	}
+	//disable user status
+		@RequestMapping(value="disableuserstatus",method=RequestMethod.POST)
+		public ResponseEntity<String> disableUserStatus(@RequestParam("id")  int id) {
+			if (userService.disableUser(id)==0){
+				return new ResponseEntity<String>("UNSUCCESS",HttpStatus.NOT_FOUND);
+			}
+			return new ResponseEntity<String>("SUCCESS",HttpStatus.OK);
+		}
 }
