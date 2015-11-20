@@ -9,179 +9,15 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 		<script src= "http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
-		
-		<style>
-			*{
-				padding:0px;
-				margin:0 auto;
-				box-sizing: border-box;
-			}
-			body{
-				background-color:#dadada;
-			}
-			.main-container{
-				width: 100%;
-			}
-			.a-container{
-				width: 1080px;
-				top:60px;
-				position:relative;
-			}
-			.a-nav{
-				min-height: 50px;
-				background-color:#43A047;	
-				position: fixed;	
-				width:100%;
-				box-shadow: 0px 0px 3px #43A047;
-				z-index: 100000;
-			}
-			.a-left-side, .a-body, .a-right-side{
-				float:left;
-				box-shadow: 0.5px 0.5px 5px #A09A9A;
-			}
-			.a-left-side{
-				width: 205px;
-				margin-right: 10px;
-				background-color:#fff;
-				
-				/*fixed*/
-				position:fixed;
-				left:10%;
-				top:60px;
-				
-			}
-			.a-body{
-				width: 570px;
-				margin-right: 10px;
-				
-				/*fixed */
-				position:relative;
-				left:20%;
-				z-index:4000;
-			}
-			.a-right-side{
-				width: 285px;
-				background-color:#fff;
-				
-				/*fixed*/
-				position:fixed;
-				right:10%;
-				top:60px;
-				
-			}
-			.a-category, .a-popular{
-				list-style-type:none;
-			}
-			ul.a-category li:first-child, ul.a-popular li:first-child{
-				background-color:#43A047;
-				color: #fff;
-				padding: 10px;
-			}
-			
-			ul.a-category li:hover{
-				background-color:#dadada;
-				cursor:pointer;
-			}
-			.a-category li:not(first-child){
-				padding: 7px 10px 7px 30px;
-				border-bottom: 1px solid #dadada;
-			}
-			
-			.article-block{
-				width: 100%;
-			}
-			.article-item{
-				background-color:#fff;
-				padding: 10px;
-				margin-bottom: 10px;
-				box-shadow: 0px 0px 3px #A09A9A;
-			}
-			.article-components{
-				border:1px solid #dadada;
-			}
-			.article-image{
-				height: 300px;
-				overflow:hidden;
-			}
-			.article-image img{
-				width: 100%;
-			}
-			.article-desc{
-				padding: 10px;
-			}
-			.article-info{
-				margin-bottom: 10px;
-			}
-			.article-info img{
-				width: 50px;
-				height: 50px;
-				margin-right: 10px;
-				float:left;
-			}
-			.article-info p{
-				float:left;
-			}
-			.article-info img:hover ,.article-info p:hover{
-				cursor:pointer;
-			}
-			.article-info pre{
-				margin-top: 7px;
-			}
-			.article-action{
-				margin-top: 10px;
-			}
-			.clear{
-				clear:both;
-			}
-			.fa{
-				padding-right: 5px;
-			}
-			.a-popular-item{
-				max-height: 70px;
-				overflow:hidden;
-				border-bottom: 1px solid #dadada;
-			}
-			.a-popular-item img{
-				width: 70px;
-				height: 70px;
-				padding: 5px;
-				float:left;
-			}
-			.a-popular-item p{
-				padding: 10px;
-			}
-			
-			/* detail page */
-			.a-detail{
-				/* min-height:500px; */
-			}
-			.d-title, .d-body{
-				background-color:#fff;
-				margin-bottom: 10px;
-				padding: 10px;
-			}
-			.d-body{
-				min-height:1000px
-			}
-			.d-body img{
-				width: 100%;
-				margin:5px 0px;
-			}
-			.a-share{
-				margin-bottom:10px;
-				background-color:#fff;
-				padding: 10px;
-			}
-			
-		</style>
+		<link rel="stylesheet" href="${pageContext.request.contextPath }/css/phearun.css"/>
 		
 	</head>
 	<body ng-app="myApp" ng-controller="myCtrl">
 		
 		<div class="main-container">
-			<div class="a-nav">
-				
-			</div>
+			
+			<jsp:include page="include/header.jsp"></jsp:include>
+			
 			<div class="a-container">
 			
 				<div class="a-row">
@@ -200,6 +36,7 @@
 							</div>	
 							<div class="d-body">
 								{{article.contents}}
+								<br><br><pre>Poster : {{article.poster | uppercase}}</pre>
 							</div>
 							<div class="a-share">
 								<pre><span>Facebook</span><span>    Youtube</span><span>   Twitter</span></pre>
@@ -248,7 +85,8 @@
 		    		$scope.article = {
 						title: data.title,
 						contents: data.contents,
-						postdate: data.postdate
+						postdate: data.postdate,
+						poster: data.user.uname
 					};
 			    });
 
@@ -257,6 +95,7 @@
 				$scope.loadPopulars = function(){
 				
 				};
+				
 			});
 		
 		</script>
