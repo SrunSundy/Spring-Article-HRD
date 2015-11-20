@@ -56,6 +56,11 @@ public class ArticleDAO implements ArtitcleServices{
 	public int getArticleRow(String key) {
 		return jdbcTemplate.queryForObject("SELECT COUNT(nid) FROM tbnews WHERE LOWER(ntitle) LIKE ?",new Object[]{key+"%"}, int.class);
 	}
+	public int updateStatus(int id, int status) {
+		return jdbcTemplate.update("UPDATE tbnews SET nstatus=? WHERE nid=?",
+				  status,id);
+		
+	}
 	private static final class UserMapper implements RowMapper<ArticleDTO>{		
 		public ArticleDTO mapRow(ResultSet rs, int rowNumber) throws SQLException {
 			ArticleDTO article = new ArticleDTO();
@@ -66,6 +71,7 @@ public class ArticleDAO implements ArtitcleServices{
 			article.setImage(rs.getString("nimage"));
 			article.setPostdate(rs.getDate("npostdate"));
 			article.setContents(rs.getString("ncontents"));
+			article.setStatus(rs.getInt("nstatus"));
 			
 			UserDTO user = new UserDTO();
 			user.setUid(rs.getInt("uid"));
