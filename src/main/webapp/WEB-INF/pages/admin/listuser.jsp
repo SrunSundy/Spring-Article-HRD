@@ -24,6 +24,11 @@ span.searchresult {
 	border-radius: 50%;
 	width: 5%;
 }
+
+.ustatus {
+	cursor: pointer;
+	margin-left: 10px
+}
 </style>
 <title>List User</title>
 </head>
@@ -50,10 +55,8 @@ span.searchresult {
 									style="height: 32px; border: 1px solid #E0E0E0; border-radius: 5px;">
 									<option value="10">10</option>
 									<option value="20">20</option>
-									<option value="50">50</option>
-									<option value="100">100</option>
 								</select> <span class="searchresult " style="">Result : <span
-									id="rowshow"></span>/<span id="recordresult"></span></span>
+									id="rowshow"></span><span id="recordresult"></span></span>
 							</div>
 						</div>
 					</div>
@@ -61,7 +64,7 @@ span.searchresult {
 						<div class="row">
 							<div class="col-sm-3">
 
-								<input type="search" onkeyup="displayPage(1); getArticleRow();"
+								<input type="search" onkeyup="listUser(1); getUserRow();"
 									id="searcharticle" class="form-control" placeholder="Searching"
 									style="margin: 0 0 0 15px; height: 32px; border: 1px solid #E0E0E0; border-radius: 5px;" />
 
@@ -69,6 +72,60 @@ span.searchresult {
 						</div>
 					</div>
 				</div>
+				<!-- Add Form for Add User Information -->
+				<!-- Trigger the modal with a button -->
+				<button type="button" class="btn btn-info btn-sm"
+					data-toggle="modal" data-target="#myModal">Add User</button>
+
+				<!-- Modal -->
+				<div id="myModal" class="modal fade" role="dialog"
+					data-keyboard="false" data-backdrop="static">
+					<div class="modal-dialog">
+
+						<!-- Modal content-->
+						<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal">&times;</button>
+								<h4 class="modal-title">Modal Header</h4>
+							</div>
+							<div class="modal-body">
+								<form>
+									<table style="width: 100%">
+										<tr>
+											<td><span>UserName<br /> <input type="text"
+													name="username" id="username" required style="width: 90%" /></span></td>
+											<td><span>Password<br /> <input type="password"
+													name="password" id="password" required style="width: 90%" /></span></td>
+											<td><span>Email<br /> <input type="email"
+													name="email" id="email" required style="width: 90%" /></span></td>
+											<td><span>Birthdate<br /> <input type="date"
+													name="birthdate" id="birthdate" required style="width: 90%" /></span></td>
+										</tr>
+										<tr>
+											<td>Image:<br /> <img id="image"
+												style="display: none; width: 20%; margin-bottom: 10px; margin-top: 10px;" />
+												<input type="hidden" name="image" id="image" /> <input
+												type="file" name="file" style="width: 90%" id="file" />
+											</td>
+										</tr>
+										<tr>
+											<td><input type="submit" value="Add" id="btn"
+												class="addbtn" /></td>
+										</tr>
+									</table>
+								</form>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-default"
+									data-dismiss="modal">Close</button>
+							</div>
+						</div>
+
+					</div>
+				</div>
+
+
+
 				<div id="listuserresult"></div>
 				<div id="content"></div>
 				<div id="demo4_top" class="demo4_top"></div>
@@ -83,75 +140,15 @@ span.searchresult {
 		var dbrow = 0;
 		var numofpage = 0;
 		var rowshow = 0;
-		listUser();
+		listUser(1);
 		getUserRow();
-		//list user show as table
-		function listUserTb(data) {
-			if (data.RESPONSE_DATA != null) {
-				jsonUser = data.RESPONSE_DATA;
-				if (jsonUser.length != 0) {
-					var tb = "<table class='table'>";
-					tb += "<tr class='tbheader'>";
-					tb += "<th>ID</th>";
-					tb += "<th>Name</th>";
-					tb += "<th>Password</th>";
-					tb += "<th>Email</th>";
-					tb += "<th>Gender</th>";
-					tb += "<th>Type</th>";
-					tb += "<th>Status</th>";
-					tb += "<th>Image</th>";
-					tb += "</tr>";
-					$
-							.each(
-									jsonUser,
-									function(i, b) {
-										tb += "<tr>";
-										tb += "<td>" + b.uid + "</td>";
-										tb += "<td>" + b.uname + "</td>";
-										tb += "<td>" + b.upassword + "</td>";
-										tb += "<td>" + b.uemail + "</td>";
-										tb += "<td>" + b.ugender + "</td>";
-										tb += "<td>" + b.utype + "</td>";
-										tb += "<td>" + b.ustatus + "</td>";
-										tb += "<td><img class='user-profile' src='${pageContext.request.contextPath}/upload/"+ b.uimage +"'/></td>";
-										tb += "</tr>";
-									});
-					tb += "</table>";
-					return tb;
-				}
-			}
 
-		}
-		//list user
-		function listUser() {
-
-			var data = {
-				"page" : "1",
-				"key" : ""
-			}
-
-			$.ajax({
-				url : "${pageContext.request.contextPath}/user/getalluser",
-				type : 'POST',
-				contentType : 'application/json', // type of data
-				data : JSON.stringify(data),
-				dataType : 'JSON',
-				success : function(data) {
-					$("#listuserresult").html(listUserTb(data));
-				},
-				error : function(data) {
-					alert("Unsuccess" + data);
-					console.log("ERROR..." + data);
-				}
-			});
-		}
 		function getUserRow() {
-
 			$.ajax({
 				method : "POST",
 				url : "${pageContext.request.contextPath}/user/usercount",
 				data : {
-					acontent : "s"
+					acontent : $("#searcharticle").val()
 				},
 				success : function(data) {
 
@@ -168,9 +165,7 @@ span.searchresult {
 					}
 					numofpage = npage;
 
-					$("#recordresult").html(dbrow);
-
-					$("#rowshow").html($("#rowset").val());
+					$("#rowshow").html(dbrow + " records");
 					loadPagination();
 				}
 			});
@@ -179,7 +174,6 @@ span.searchresult {
 
 			$('.demo4_top').bootpag({
 				total : numofpage,
-
 				maxVisible : 5,
 				leaps : true,
 				firstLastUse : true,
@@ -193,24 +187,118 @@ span.searchresult {
 				lastClass : 'last',
 				firstClass : 'first'
 			}).on("page", function(event, num) {
-
-				displayPage(num);
+				listUser(num);
 			});
 		}
-		function displayPage(mypage) {
+		//enable status
+		function enablestatus(id) {
+			$
+					.ajax({
+						url : "${pageContext.request.contextPath}/user/enableuserstatus",
+						type : 'POST',
+						data : {
+							id : id
+						},
+						success : function(data) {
+							listUser(1);
+							getUserRow();
+						}
+					});
+		}
+		//disable status
+		function disablestatus(id) {
+			$
+					.ajax({
+						url : "${pageContext.request.contextPath}/user/disableuserstatus",
+						type : 'POST',
+						data : {
+							id : id
+						},
+						success : function(data) {
+							listUser(1);
+							getUserRow();
+						}
+					});
+		}
+		//list user show as table
+		function listUserTb(data) {
+			if (data.RESPONSE_DATA != null) {
+				jsonUser = data.RESPONSE_DATA;
+				if (jsonUser.length != 0) {
+					var tb = "<table class='table'>";
+					tb += "<tr class='tbheader'>";
+					tb += "<th>ID</th>";
+					tb += "<th>Name</th>";
+					tb += "<th>Password</th>";
+					tb += "<th>Email</th>";
+					tb += "<th>Gender</th>";
+					tb += "<th>Type</th>";
+					tb += "<th>Status</th>";
+					tb += "<th>Image</th>";
+					tb += "<th>Action</th>";
+					tb += "</tr>";
+					$
+							.each(
+									jsonUser,
+									function(i, b) {
+										tb += "<tr>";
+										tb += "<td>" + b.uid + "</td>";
+										tb += "<td>" + b.uname + "</td>";
+										tb += "<td>" + b.upassword + "</td>";
+										tb += "<td>" + b.uemail + "</td>";
+										tb += "<td>" + b.ugender + "</td>";
+										tb += "<td>" + b.utype + "</td>";
+										tb += "<td>";
+										if (b.ustatus == 0) {
+											tb += "<i class='glyphicon glyphicon-remove ustatus' onclick='enablestatus("
+													+ b.uid + ")'></i>";
+										} else {
+											tb += "<i class='glyphicon glyphicon-ok ustatus' onclick='disablestatus("
+													+ b.uid + ")'></i>";
+										}
+										tb += "</td>";
+										tb += "<td><img class='user-profile' src='${pageContext.request.contextPath}/upload/"+ b.uimage +"'/></td>";
+										tb += "<td><span class='glyphicon glyphicon-edit ustatus'  onclick='disablestatus("
+												+ b.uid + ")'></span></td>";
+										tb += "</tr>";
+									});
+					tb += "</table>";
+					return tb;
+				}
+			}
 
+		}
+		function listNFtb() {
+			var tb = "<table class='table tbstyle'>";
+			tb += "<tr class='tbheader '>";
+			tb += "<th>ID</th>";
+			tb += "<th>Name</th>";
+			tb += "<th>Password</th>";
+			tb += "<th>Email</th>";
+			tb += "<th>Gender</th>";
+			tb += "<th>Type</th>";
+			tb += "<th>Status</th>";
+			tb += "<th>Image</th>";
+			tb += "<th >Action</th></tr>";
+			tb += "<tr><td colspan='8'><span class='dnfound' >DATA NOT FOUND</span></td></tr>";
+			return tb;
+		}
+		//list user
+		function listUser(mypage) {
 			$.ajax({
-				method : "POST",
-				url : "displayarticlepage",
+				url : "${pageContext.request.contextPath}/user/getalluser",
+				type : 'POST',
 				data : {
-					acontent : $("#searcharticle").val(),
-					page : mypage
-
+					page : mypage,
+					key : $("#searcharticle").val()
 				},
 				success : function(data) {
-
-					$("#listarticleresult").html(listTb(data.RESPONSE_DATA));
-
+					if (data.RESPONSE_DATA.length == 0) {
+						$("#demo4_top").html("");
+						$("#listuserresult").html(listNFtb());
+						return;
+					}
+					$("#listuserresult").html(listUserTb(data));
 				}
 			});
 		}
