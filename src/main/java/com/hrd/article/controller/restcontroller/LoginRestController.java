@@ -3,6 +3,7 @@ package com.hrd.article.controller.restcontroller;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -17,7 +18,8 @@ import com.hrd.article.services.LoginFormService;
 @Controller
 @RequestMapping(value={"/login/"})
 public class LoginRestController {
-
+	
+	@Autowired
 	private LoginFormService loginFormService;
 	
 	/**
@@ -25,8 +27,9 @@ public class LoginRestController {
 	 * Get One Row Category
 	 */
 	@RequestMapping ( value = {"/login"}, method = RequestMethod.GET )
-	public ResponseEntity<Map<String,Object>> getCategory(@RequestParam String email, @RequestParam String pwd){
+	public ResponseEntity<Map<String,Object>> getCategory(@RequestParam("email") String email, @RequestParam("password") String pwd){
 		
+		System.out.println("login >>>>");
 		UserDTO user = loginFormService.getUser(email, pwd);
 		Map<String, Object> map = new HashMap<String, Object>();
 		
