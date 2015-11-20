@@ -1,9 +1,11 @@
 package com.hrd.article.controller;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -19,22 +21,21 @@ public class AdminController {
 	
 	@RequestMapping ( value = {"/category"}, method = RequestMethod.GET)
 	public String homePage() {
-		//Category category = new Category();
-		//boolean bool = categoryService.isInsertCategory(category);
-		
-/*		List<Category> list = categoryService.searchCategoryByName("sok");
-		
-		for (Category category : list) {
-			System.out.println(category.getId() +"  "+ category.getName());
-			
-		}*/
-		
-		
-/*		Category category = categoryService.getCategory(3);
-		System.out.println(category.getId() +" "+ category.getName());*/
-
-//		System.out.println("total is: " + categoryService.getTotalCategory());
 		
 		return "admin/category";
+	}
+	@RequestMapping( value={"/article"})
+	public String gotoArticle(ModelMap model) throws SQLException{
+			
+		model.addAttribute("message","Hellosdfsf");
+		return "admin/article";
+		
+	}
+	@RequestMapping( value={"/viewlistarticle"})
+	public String gotoListArticle(ModelMap model) throws SQLException{
+			
+		model.addAttribute("message","Hellosdfsf");
+		return "admin/listarticle";
+		
 	}
 }
