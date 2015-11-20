@@ -16,7 +16,7 @@ public interface UserServices {
 	
 	public int editUser(UserDTO user);
 	
-	public int countUser();
+	public int countUser(String key);
 	
 	public UserDTO getUser(int id);
 }
