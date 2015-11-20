@@ -27,6 +27,13 @@ body {
 	z-index: 100000;
 }
 
+.a-logo{
+	float:left;
+}
+.a-logo img{
+	width:50px;
+	height:50px;
+}
 .nav-search{
 	position:relative;
 	left:10%;
