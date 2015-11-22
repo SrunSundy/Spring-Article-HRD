@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -24,19 +25,28 @@ public class ArticleDAO implements ArtitcleServices{
 		this.jdbcTemplate = jdbcTemplate;
 	}
 
-	public List<ArticleDTO> listArticles(int pages, String key) {
+	public List<ArticleDTO> listArticles(int pages) {
 		int offset=(pages*10)-10;
-		return jdbcTemplate.query("SELECT * FROM tbnews n INNER JOIN tbuser u ON n.nuid=u.uid INNER JOIN tbcategory c ON c.cid=n.ncid WHERE UPPER(ntitle) LIKE UPPER(?) ORDER BY nid LIMIT 10 OFFSET ?",
-			   new Object[]{key+"%", offset}, new UserMapper());
+
+		return jdbcTemplate.query("SELECT * FROM tbnews n INNER JOIN tbuser u ON n.nuid=u.uid INNER JOIN tbcategory c ON c.cid=n.ncid  ORDER BY n.nid LIMIT 10 OFFSET ?"
+				,new Object[]{offset},new UserMapper());
 	}
 
 	public ArticleDTO listArticle(int id) {
-		return jdbcTemplate.queryForObject("SELECT * FROM tbnews n INNER JOIN tbuser u ON n.nuid=u.uid INNER JOIN tbcategory c ON c.cid=n.ncid WHERE nid=?", new Object[]{id}, new UserMapper());
+		try{
+			return jdbcTemplate.queryForObject("SELECT * FROM tbnews n INNER JOIN tbuser u ON n.nuid=u.uid INNER JOIN tbcategory c ON c.cid=n.ncid WHERE nid=?",new Object[]{id}, new UserMapper());
+		} catch (IncorrectResultSizeDataAccessException ex) {
+            return null;
+          // print idSkill, lang.toLanguageTag(), extColumn, extName here
+        }
 	}
 
 	public int updateArticle(ArticleDTO article) {
+
 		return jdbcTemplate.update("UPDATE tbnews SET ntitle=?, ndescription=?, ncontents=?, nimage=?, nuid=?, ncid=? WHERE nid=?",
 			   article.getTitle(), article.getDescription(), article.getContents(), article.getImage(),  article.getUser().getUid(), article.getCategory().getId(), article.getId());
+	
+
 	}
 
 	public int insertArticle(ArticleDTO article) {
@@ -51,34 +61,22 @@ public class ArticleDAO implements ArtitcleServices{
 	public List<ArticleDTO> searchArticle(String key) {
 		return jdbcTemplate.query("SELECT * FROM tbnews n INNER JOIN tbuser u ON n.nuid=u.uid INNER JOIN tbcategory c ON c.cid=n.ncid WHERE UPPER(ntitle) LIKE UPPER(?)", new Object[]{key+"%"}, new UserMapper());
 	}
-	
-	
-	public List<ArticleDTO> listArticles(String key, int pages, int uid, int cid){
-		
-		int offset=(pages*10)-10;
-		
-		if(cid==0 && uid==0)
-			return jdbcTemplate.query("SELECT * FROM tbnews n INNER JOIN tbuser u ON n.nuid=u.uid INNER JOIN tbcategory c ON c.cid=n.ncid WHERE UPPER(ntitle) LIKE UPPER(?) ORDER BY nid LIMIT 10 OFFSET ?",
-				   new Object[]{"%"+key+"%", offset}, new UserMapper());
-		
-		if(cid==0)
-			return jdbcTemplate.query("SELECT * FROM tbnews n INNER JOIN tbuser u ON n.nuid=u.uid INNER JOIN tbcategory c ON c.cid=n.ncid WHERE uid=? AND UPPER(ntitle) LIKE UPPER(?) ORDER BY nid LIMIT 10 OFFSET ?",
-				   new Object[]{uid, "%"+key+"%", offset}, new UserMapper());
-		
-		return jdbcTemplate.query("SELECT * FROM tbnews n INNER JOIN tbuser u ON n.nuid=u.uid INNER JOIN tbcategory c ON c.cid=n.ncid WHERE cid=? AND UPPER(ntitle) LIKE UPPER(?) ORDER BY nid LIMIT 10 OFFSET ?",
-			   new Object[]{cid,"%"+key+"%", offset}, new UserMapper());
-	}
-	
+
 	
 	public int getArticleRow(String key) {
-		return jdbcTemplate.queryForObject("SELECT COUNT(nid) FROM tbnews WHERE LOWER(ntitle) LIKE ?",new Object[]{key+"%"}, int.class);
+		return jdbcTemplate.queryForObject("SELECT COUNT(nid) FROM tbnews WHERE LOWER(ncontents) LIKE ?",new Object[]{"%"+key+"%"}, int.class);
 	}
-	
-	public int updateStatus(int id, int status) {
-		return jdbcTemplate.update("UPDATE tbnews SET nstatus=? WHERE nid=?",
-				  status,id);
+	public int enableArticle(int id) {
+		return jdbcTemplate.update("UPDATE tbnews SET nstatus=1 WHERE nid=?",
+				  id);
 		
 	}
+	public int disableArticle(int id) {
+		return jdbcTemplate.update("UPDATE tbnews SET nstatus=0 WHERE nid=?",
+				  id);
+		
+	}
+
 	private static final class UserMapper implements RowMapper<ArticleDTO>{		
 		public ArticleDTO mapRow(ResultSet rs, int rowNumber) throws SQLException {
 			ArticleDTO article = new ArticleDTO();
@@ -93,9 +91,7 @@ public class ArticleDAO implements ArtitcleServices{
 			
 			UserDTO user = new UserDTO();
 			user.setUid(rs.getInt("uid"));
-			user.setUimage(rs.getString("uimage"));
-			user.setUname(rs.getString("uname"));
-				
+			
 			CategoryDTO category = new CategoryDTO();
 			category.setId(rs.getInt("cid"));
 			category.setName(rs.getString("cname"));
@@ -107,5 +103,11 @@ public class ArticleDAO implements ArtitcleServices{
 		}
 	}
 
+	public List<ArticleDTO> listArticles(String key, int pages, int uid, int cid) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	
+
 }
