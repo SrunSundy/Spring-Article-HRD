@@ -30,7 +30,13 @@ public class UserDAO implements UserServices {
 
 	public List<UserDTO> listUser(int page, String key) {
 		int offset=(page*10)-10;
-		return jdbcTemplate.query("SELECT * FROM tbuser WHERE UPPER(uname) LIKE UPPER(?) ORDER BY uid LIMIT 10 OFFSET ? ", new Object[]{"%"+key+"%", offset}, new UserMapper());
+		if((page == 0 && key.equals("*")) || page == 0){
+			if(page == 0 && key.equals("*"))
+			return jdbcTemplate.query("SELECT * FROM tbuser ORDER BY uid ", new UserMapper());
+		}
+		else if((page != 0 && key.equals("*")))
+			key = "%";
+		    return jdbcTemplate.query("SELECT * FROM tbuser WHERE UPPER(uname) LIKE UPPER(?) ORDER BY uid LIMIT 10 OFFSET ? ", new Object[]{"%"+key+"%", offset}, new UserMapper());
 	}
 
 	public int insertUser(UserDTO user) {
@@ -52,16 +58,9 @@ public class UserDAO implements UserServices {
             return null;
         }	
 	}
-	public int statusUser(int id,int status) {
-		if(status==1){
-			String sql="UPDATE tbuser SET ustatus=0 WHERE uid=?";
-			return jdbcTemplate.update(sql,id);
-		}else if(status==0){
-			String sql="UPDATE tbuser SET ustatus=1 WHERE uid=?";
-			return jdbcTemplate.update(sql,id);
-		}else{
-			return 0;
-		}
+	public int statusUser(int id) {
+			String sql="UPDATE tbuser SET ustatus=(SELECT CASE WHEN ustatus = 0 THEN 1 ELSE 0 END FROM tbuser WHERE uid=?) WHERE uid=?";
+			return jdbcTemplate.update(sql,id,id);
 	}
 	private static final class UserMapper implements RowMapper<UserDTO>{		
 		public UserDTO mapRow(ResultSet rs, int rowNumber) throws SQLException {
