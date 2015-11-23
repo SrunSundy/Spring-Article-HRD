@@ -117,13 +117,16 @@ public class CategoryServiceImpl implements CategoryService {
 	}
 
 	/**
-	 * Search Category By Category Name
+	 * Search Category By Category Key
 	 */
 	public List<CategoryDTO> searchCategoryByName(int page, String key) {
 		int offset = (page * 10) - 10;
 		String sql = "";
 		Object[] obj = null;
-		if ( key.equals("*")){
+		if ( (page == 0 && key.equals("*"))){
+			//obj = new Object[]{ offset };
+			sql = "SELECT cid, cname, cdescription, cstatus FROM tbcategory ORDER BY cid DESC ;";
+		}else if ( key.equals("*") ){
 			obj = new Object[]{ offset };
 			sql = "SELECT cid, cname, cdescription, cstatus FROM tbcategory ORDER BY cid DESC LIMIT 10 OFFSET ?;";
 		}else{
@@ -144,36 +147,6 @@ public class CategoryServiceImpl implements CategoryService {
 		String sql = "SELECT COUNT(*) FROM tbcategory;";
 		int total = jdbcTemplate.queryForObject(sql, Integer.class);
 		return total;
-	}
-
-	/**
-	 * Change Status Disable Category
-	 */
-	public boolean isStatusDisable(int id, int status) {
-		String sql = "UPDATE tbcategory SET cstatus = ? WHERE cid = ? ;";
-
-		Object[] obj = { status, id };
-
-		int result = jdbcTemplate.update(sql, obj);
-		if (result > 0) {
-			return true;
-		}
-		return false;
-	}
-
-	/**
-	 * Change Status Disable Category
-	 */
-	public boolean isStatusEnable(int id, int status) {
-		String sql = "UPDATE tbcategory SET cstatus = ? WHERE cid = ? ;";
-
-		Object[] obj = { status, id };
-
-		int result = jdbcTemplate.update(sql, obj);
-		if (result > 0) {
-			return true;
-		}
-		return false;
 	}
 
 	/**
@@ -223,6 +196,18 @@ public class CategoryServiceImpl implements CategoryService {
 			return lst;
 		}
 		return null;
+	}
+
+	public boolean isStatusChange(int id) {
+		String sql = "UPDATE tbcategory SET cstatus = ( CASE WHEN (cstatus = (SELECT cstatus FROM tbcategory WHERE cid = ?)) THEN 0 ELSE  1 END ) WHERE cid = ?";
+
+		Object[] obj = { id };
+
+		int result = jdbcTemplate.update(sql, obj);
+		if (result > 0) {
+			return true;
+		}
+		return false;
 	}
 
 }
