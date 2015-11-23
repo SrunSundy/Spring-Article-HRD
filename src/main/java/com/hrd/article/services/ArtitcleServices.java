@@ -6,21 +6,19 @@ import com.hrd.article.entities.ArticleDTO;
 
 public interface ArtitcleServices {
 	
-	public List<ArticleDTO> listArticles(int page);
-	public ArticleDTO listArticle(int id);
-	public int updateArticle(ArticleDTO article);
-	public int insertArticle(ArticleDTO article);
-	public int deleteArticle(int id);
-	public List<ArticleDTO> searchArticle(String key);
 
-	public int getArticleRow(String key);
-
-	public int enableArticle(int id);
-	public int disableArticle(int id);
-
-
-	public List<ArticleDTO> listArticles(String key,int pages, int uid, int cid);
+	public List<ArticleDTO> listArticles(int page,String key);
 	
-
+	public int insertArticle(ArticleDTO article);
+	
+	public int updateArticle(ArticleDTO article);
+	
+	public int deleteArticle(int id);
+	
+	public ArticleDTO listArticle(int id);
+	
+	public int enableArticle(int id);
+	
+	public int disableArticle(int id);
 	
 }
