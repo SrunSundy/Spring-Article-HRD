@@ -17,8 +17,8 @@ public interface ArtitcleServices {
 	
 	public ArticleDTO listArticle(int id);
 	
-	public int enableArticle(int id);
+	public int toggleArticle(int id);
 	
-	public int disableArticle(int id);
+
 	
 }
