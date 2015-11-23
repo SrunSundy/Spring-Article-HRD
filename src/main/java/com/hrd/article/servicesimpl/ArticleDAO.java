@@ -30,13 +30,13 @@ public class ArticleDAO implements ArtitcleServices{
 		
 		if((page == 0 && key.equals("*")) || page == 0){
 			if(page == 0 && key.equals("*")) key = "%";
-			return jdbcTemplate.query("SELECT * FROM tbnews n INNER JOIN tbuser u ON n.nuid=u.uid INNER JOIN tbcategory c ON c.cid=n.ncid WHERE UPPER(ntitle) LIKE UPPER(?) ORDER BY npin",
+			return jdbcTemplate.query("SELECT * FROM tbnews n INNER JOIN tbuser u ON n.nuid=u.uid INNER JOIN tbcategory c ON c.cid=n.ncid WHERE UPPER(ntitle) LIKE UPPER(?) ORDER BY n.nid",
 				   new Object[]{"%"+key+"%"}, new UserMapper());
 		}
 		else if((page != 0 && key.equals("*")))
 			key = "%";
 		
-		return jdbcTemplate.query("SELECT * FROM tbnews n INNER JOIN tbuser u ON n.nuid=u.uid INNER JOIN tbcategory c ON c.cid=n.ncid WHERE UPPER(ntitle) LIKE UPPER(?) ORDER BY npin LIMIT 10 OFFSET ?",
+		return jdbcTemplate.query("SELECT * FROM tbnews n INNER JOIN tbuser u ON n.nuid=u.uid INNER JOIN tbcategory c ON c.cid=n.ncid WHERE UPPER(ntitle) LIKE UPPER(?) ORDER BY n.nid LIMIT 10 OFFSET ?",
 			   new Object[]{"%"+key+"%", offset}, new UserMapper());
 	
 	}
@@ -62,7 +62,7 @@ public class ArticleDAO implements ArtitcleServices{
 	
 	public ArticleDTO listArticle(int id) {
 		try{
-			return jdbcTemplate.queryForObject("SELECT * FROM tbnews n INNER JOIN tbuser u ON n.nuid=u.uid INNER JOIN tbcategory c ON c.cid=n.ncid WHERE UPPER(n.ntitle) LIKE UPPER(?)  ORDER BY n.nid LIMIT ? OFFSET ?",new Object[]{id}, new UserMapper());
+			return jdbcTemplate.queryForObject("SELECT * FROM tbnews n INNER JOIN tbuser u ON n.nuid=u.uid INNER JOIN tbcategory c ON c.cid=n.ncid WHERE n.nid=?",new Object[]{id}, new UserMapper());
 		} catch (IncorrectResultSizeDataAccessException ex) {
             return null;
           // print idSkill, lang.toLanguageTag(), extColumn, extName here
