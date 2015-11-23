@@ -20,9 +20,25 @@ import com.hrd.article.services.ArtitcleServices;
 @RequestMapping("api/article")
 public class ArticleAPI {
 
-	
 	@Autowired
 	private ArtitcleServices articleservice;
+	
+	@RequestMapping(value="/", method=RequestMethod.GET)
+	public ResponseEntity<Map<String,Object>> listArticles(){
+		List<ArticleDTO> articles = articleservice.listArticles(0,"*");
+		Map<String, Object> map = new HashMap<String,Object>();
+		if(articles.isEmpty()){
+			map.put("STATUS", HttpStatus.NOT_FOUND.value());
+			map.put("MESSAGE", "ARTICLE NOT FOUND...");
+			return new ResponseEntity<Map<String,Object>>
+										(map,HttpStatus.NO_CONTENT);
+		}	
+		map.put("STATUS", HttpStatus.OK.value());
+		map.put("MESSAGE", "ARITCLE HAS BEEN FOUND");
+		map.put("RESPONSE_DATA",articles);
+		return new ResponseEntity<Map<String,Object>>
+									(map,HttpStatus.OK);	
+	}
 	
 	@RequestMapping(value="/{page}/{key}", method=RequestMethod.GET)
 	public ResponseEntity<Map<String,Object>> listArticles(@PathVariable("page") int page , @PathVariable("key") String key){
@@ -32,7 +48,7 @@ public class ArticleAPI {
 			map.put("STATUS", HttpStatus.NOT_FOUND.value());
 			map.put("MESSAGE", "ARTICLE NOT FOUND...");
 			return new ResponseEntity<Map<String,Object>>
-										(map,HttpStatus.NOT_FOUND);
+										(map,HttpStatus.NO_CONTENT);
 		}	
 		map.put("STATUS", HttpStatus.OK.value());
 		map.put("MESSAGE", "ARITCLE HAS BEEN FOUND");
@@ -97,8 +113,6 @@ public class ArticleAPI {
 		}
 	}
 	
-
-	
 	@RequestMapping(value="/{id}", method=RequestMethod.GET)
 	public ResponseEntity<Map<String,Object>> listArticle(@PathVariable("id") int id ){
 		
@@ -118,12 +132,7 @@ public class ArticleAPI {
 									(map,HttpStatus.OK);	
 	}
 	
-
-	
-	
-	
-	
-	@RequestMapping(value="/toggle/{id}", method= RequestMethod.GET )
+	@RequestMapping(value="/toggle/{id}", method= RequestMethod.PATCH )
 	public ResponseEntity<Map<String,Object>> toggleArticle(@PathVariable("id") int id){
 		
 		Map<String, Object> map  = new HashMap<String, Object>();

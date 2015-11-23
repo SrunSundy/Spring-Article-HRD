@@ -16,5 +16,6 @@ public interface CategoryService {
 	public int getTotalCategory();
 	public boolean isStatusEnable(int status,int id);
 	public boolean isStatusDisable(int status,int id);
+	public int toggleCategory(int id);
 	
 }

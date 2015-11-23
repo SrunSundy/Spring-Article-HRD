@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hrd.article.entities.CategoryDTO;
@@ -23,11 +22,7 @@ public class CategoryRestController {
 	
 	@Autowired
 	private CategoryService categoryService;
-	
-	
-	/**
-	 * Delete Category 
-	 */
+
 	@RequestMapping ( value = {"/{id}"}, method = RequestMethod.DELETE )
 	public ResponseEntity<Map<String,Object>> deleteCategory(@PathVariable("id") int id){
 		
@@ -43,38 +38,21 @@ public class CategoryRestController {
 	}
 	
 	
-	/**
-	 * Change Status Category 
-	 */
-	@RequestMapping ( value = {"toggle/{status}/{id}"}, method = RequestMethod.PATCH )
-	public ResponseEntity<Map<String,Object>> statusCategory(@PathVariable("status") int status ,@PathVariable("id") int id){
+	@RequestMapping ( value = "/toggle/{id}", method = RequestMethod.PATCH )
+	public ResponseEntity<Map<String,Object>> statusCategory(@PathVariable("id") int id){
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		if ( status == 0 ){
-			if ( categoryService.isStatusDisable(id,status) ){
-				map.put("MESSAGE", "STATUS DISABLE SUCCESS...!");
-				map.put("STATUS", HttpStatus.OK.value());
-				return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
-			}
-		}else{
-			if ( categoryService.isStatusEnable(id,status) ){
-				map.put("MESSAGE", "STATUS ENABLE SUCCESS...!");
-				map.put("STATUS", HttpStatus.OK.value());
-				return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
-			}
+		if(categoryService.toggleCategory(id)==1){	
+			map.put("MESSAGE","CATEGORY IS ENABLED");
+			map.put("STATUS", HttpStatus.OK.value());
+			return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		}
-
-		map.put("MESSAGE", "STATUS CHANGE FAIL...!");
+		map.put("MESSAGE","FAIL TO TOGGLE");
 		map.put("STATUS", HttpStatus.NOT_FOUND.value());
-		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND);
 	}
 	
-	
-	/**
-	 * 
-	 * Add Category
-	 */
 	@RequestMapping ( value = {"/"}, method = RequestMethod.POST )
 	public ResponseEntity<Map<String,Object>> addCategory(@RequestBody CategoryDTO category){
 		
@@ -89,11 +67,6 @@ public class CategoryRestController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
-	
-	/**
-	 * 
-	 * Update Category
-	 */
 	@RequestMapping ( value = {"/"}, method = RequestMethod.PUT )
 	public ResponseEntity<Map<String,Object>> upateCategory(@RequestBody CategoryDTO category){
 		
@@ -108,11 +81,6 @@ public class CategoryRestController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
-	
-	/**
-	 * 
-	 * List All Category
-	 */
 	@RequestMapping ( value = {"/"}, method = RequestMethod.GET )
 	public ResponseEntity<Map<String,Object>> listCategoryAll(){
 		List<CategoryDTO> list = categoryService.listCategoryAll();
@@ -130,31 +98,6 @@ public class CategoryRestController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
-	/**
-	 * 
-	 * List Category Page 
-	 */
-/*	@RequestMapping ( value = {"/{page}"}, method = RequestMethod.GET )
-	public ResponseEntity<Map<String,Object>> listCategoryPage(@PathVariable("page") int page){
-		List<CategoryDTO> list = categoryService.listCategory(page);
-		Map<String, Object> map = new HashMap<String, Object>();
-
-		if ( !list.isEmpty() ){
-			map.put("MESSAGE", "SUCCESS");
-			map.put("STATUS", HttpStatus.OK);
-			map.put("RESPONSE_DATA" , list);
-			return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
-		}
-		map.put("MESSAGE", "FAIL");
-		map.put("STATUS", HttpStatus.NOT_FOUND);
-		map.put("RESPONSE_DATA", null);
-		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_FOUND);
-	}*/
-	
-	/**
-	 * 
-	 * Get One Row Category
-	 */
 	@RequestMapping ( value = {"/{id}"}, method = RequestMethod.GET )
 	public ResponseEntity<Map<String,Object>> getCategory(@PathVariable("id") int id){
 		CategoryDTO category = categoryService.getCategory(id);
@@ -171,11 +114,6 @@ public class CategoryRestController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
-	
-	/**
-	 * 
-	 * Search Category With Key
-	 */
 	@RequestMapping ( value = {"/{page}/{key}"}, method = RequestMethod.GET )
 	public ResponseEntity<Map<String,Object>> searchCategory(@PathVariable("page") int page, @PathVariable("key") String key){
 		List<CategoryDTO> list = categoryService.searchCategoryByName(page, key);

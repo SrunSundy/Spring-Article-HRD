@@ -1,7 +1,5 @@
 package com.hrd.article.servicesimpl;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -10,11 +8,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import com.hrd.article.entities.CategoryDTO;
@@ -72,21 +67,6 @@ public class CategoryServiceImpl implements CategoryService {
 			return true;
 		}
 		return false;
-
-		/**
-		 * Insert Auto Get Primary Key
-		 */
-
-		/*
-		 * KeyHolder keyHolder = new GeneratedKeyHolder(); jdbcTemplate.update(
-		 * new PreparedStatementCreator() { public PreparedStatement
-		 * createPreparedStatement(Connection connection) throws SQLException {
-		 * PreparedStatement ps = connection.prepareStatement(sql, new String[]
-		 * {"cid"}); ps.setString(1, "ravuth"); return ps; } }, keyHolder);
-		 * 
-		 * System.out.println("key is :" + keyHolder.getKey());
-		 */
-
 	}
 
 	/**
@@ -117,27 +97,22 @@ public class CategoryServiceImpl implements CategoryService {
 	}
 
 	/**
-	 * Search Category By Category Key
+	 * Search Category By Category Name
 	 */
 	public List<CategoryDTO> searchCategoryByName(int page, String key) {
+		
 		int offset = (page * 10) - 10;
-		String sql = "";
-		Object[] obj = null;
-		if ( (page == 0 && key.equals("*"))){
-			//obj = new Object[]{ offset };
-			sql = "SELECT cid, cname, cdescription, cstatus FROM tbcategory ORDER BY cid DESC ;";
-		}else if ( key.equals("*") ){
-			obj = new Object[]{ offset };
-			sql = "SELECT cid, cname, cdescription, cstatus FROM tbcategory ORDER BY cid DESC LIMIT 10 OFFSET ?;";
-		}else{
-			obj = new Object[]{ "%" + key + "%", offset };
-			sql = "SELECT cid, cname, cdescription, cstatus FROM tbcategory WHERE cname like ? ORDER BY cid DESC LIMIT 10 OFFSET ?;";
+		
+		if((page == 0 && key.equals("*")) || page == 0){
+			if(page == 0 && key.equals("*")) key = "%";
+			return jdbcTemplate.query("SELECT cid, cname, cdescription, cstatus FROM tbcategory WHERE UPPER(cname) LIKE UPPER(?) ORDER BY cid DESC",
+				   new Object[]{"%"+key+"%"}, new CategoryRowMapper());
 		}
-		List<CategoryDTO> lst = new ArrayList<CategoryDTO>();
-		lst = jdbcTemplate.query(sql, obj, new CategoryRowMapper());
-
-		return lst;
-
+		else if((page != 0 && key.equals("*")))
+			key = "%";
+		
+		return jdbcTemplate.query("SELECT cid, cname, cdescription, cstatus FROM tbcategory WHERE UPPER(cname) LIKE UPPER(?) ORDER BY cid DESC LIMIT 10 OFFSET ?",
+				   new Object[]{"%"+key+"%", offset}, new CategoryRowMapper());
 	}
 
 	/**
@@ -147,6 +122,36 @@ public class CategoryServiceImpl implements CategoryService {
 		String sql = "SELECT COUNT(*) FROM tbcategory;";
 		int total = jdbcTemplate.queryForObject(sql, Integer.class);
 		return total;
+	}
+
+	/**
+	 * Change Status Disable Category
+	 */
+	public boolean isStatusDisable(int id, int status) {
+		String sql = "UPDATE tbcategory SET cstatus = ? WHERE cid = ? ;";
+
+		Object[] obj = { status, id };
+
+		int result = jdbcTemplate.update(sql, obj);
+		if (result > 0) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Change Status Disable Category
+	 */
+	public boolean isStatusEnable(int id, int status) {
+		String sql = "UPDATE tbcategory SET cstatus = ? WHERE cid = ? ;";
+
+		Object[] obj = { status, id };
+
+		int result = jdbcTemplate.update(sql, obj);
+		if (result > 0) {
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -198,16 +203,10 @@ public class CategoryServiceImpl implements CategoryService {
 		return null;
 	}
 
-	public boolean isStatusChange(int id) {
-		String sql = "UPDATE tbcategory SET cstatus = ( CASE WHEN (cstatus = (SELECT cstatus FROM tbcategory WHERE cid = ?)) THEN 0 ELSE  1 END ) WHERE cid = ?";
-
-		Object[] obj = { id };
-
-		int result = jdbcTemplate.update(sql, obj);
-		if (result > 0) {
-			return true;
-		}
-		return false;
+	public int toggleCategory(int id) {
+		return jdbcTemplate.update("UPDATE tbcategory set cstatus=(select CASE WHEN cstatus = 0 THEN 1 ELSE 0 END from tbcategory WHERE cid=?) WHERE cid=?",
+				  id,id);
 	}
+	
 
 }
