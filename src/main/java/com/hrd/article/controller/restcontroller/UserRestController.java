@@ -69,10 +69,10 @@ public class UserRestController {
 	}
 	
 	//User Status
-	@RequestMapping(value="toggle/{status}/{id}",method=RequestMethod.PATCH)
-	public ResponseEntity<Map<String,Object>> addUser(@PathVariable("status") int status,@PathVariable("id") int id) {
+	@RequestMapping(value="toggle/{id}",method=RequestMethod.PATCH)
+	public ResponseEntity<Map<String,Object>> addUser(@PathVariable("id") int id) {
 		Map<String,Object> map=new HashMap<String, Object>();
-		if(userService.statusUser(id, status) == 0){
+		if(userService.statusUser(id) == 0){
 			    map.put("STATUS", HttpStatus.NOT_FOUND.value());
 			    map.put("MESSAGE","FAILD TO ENABLE USERT");
 				return new ResponseEntity<Map<String,Object>>(map,HttpStatus.NOT_FOUND);
