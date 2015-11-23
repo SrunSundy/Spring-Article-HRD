@@ -123,11 +123,11 @@ public class ArticleAPI {
 	
 	
 	
-	@RequestMapping(value="/enable/{id}", method= RequestMethod.GET )
-	public ResponseEntity<Map<String,Object>> enableArticle(@PathVariable("id") int id){
+	@RequestMapping(value="/toggle/{id}", method= RequestMethod.GET )
+	public ResponseEntity<Map<String,Object>> toggleArticle(@PathVariable("id") int id){
 		
 		Map<String, Object> map  = new HashMap<String, Object>();
-		if(articleservice.enableArticle(id)==1){
+		if(articleservice.toggleArticle(id)==1){
 			map.put("MESSAGE","ARTICLE IS ENABLED");
 			map.put("STATUS", HttpStatus.OK.value());
 			return new ResponseEntity<Map<String,Object>>
@@ -139,22 +139,7 @@ public class ArticleAPI {
 								(map, HttpStatus.NOT_FOUND);
 		}
 	}
-	@RequestMapping(value="/disable/{id}", method= RequestMethod.GET )
-	public ResponseEntity<Map<String,Object>> disableArticle(@PathVariable("id") int id){
-		
-		Map<String, Object> map  = new HashMap<String, Object>();
-		if(articleservice.disableArticle(id)==1){
-			map.put("MESSAGE","ARTICLE IS DISABLED");
-			map.put("STATUS", HttpStatus.OK.value());
-			return new ResponseEntity<Map<String,Object>>
-								(map, HttpStatus.OK);
-		}else{
-			map.put("MESSAGE","FAIL TO DISABLE");
-			map.put("STATUS", HttpStatus.NOT_FOUND.value());
-			return new ResponseEntity<Map<String,Object>>
-								(map, HttpStatus.NOT_FOUND);
-		}
-	}
+	
 	
 	
 }
