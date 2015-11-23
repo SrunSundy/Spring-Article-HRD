@@ -70,16 +70,12 @@ public class ArticleDAO implements ArtitcleServices{
 	}
 
 	
-	public int enableArticle(int id) {
-		return jdbcTemplate.update("UPDATE tbnews SET nstatus=1 WHERE nid=?",
-				  id);
+	public int toggleArticle(int id) {
+		return jdbcTemplate.update("UPDATE tbnews set nstatus=(select CASE WHEN nstatus = 0 THEN 1 ELSE 0 END from tbnews WHERE nid=?) WHERE nid=?",
+				  id,id);
 		
 	}
-	public int disableArticle(int id) {
-		return jdbcTemplate.update("UPDATE tbnews SET nstatus=0 WHERE nid=?",
-				  id);
-		
-	}
+
 
 	private static final class UserMapper implements RowMapper<ArticleDTO>{		
 		public ArticleDTO mapRow(ResultSet rs, int rowNumber) throws SQLException {
