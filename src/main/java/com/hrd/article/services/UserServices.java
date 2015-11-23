@@ -15,7 +15,7 @@ public interface UserServices {
 	
 	public int editUser(UserDTO user);
 	
-    public int statusUser(int id,int Status);
+    public int statusUser(int id);
 	
 	public UserDTO getUser(int id);
 	
