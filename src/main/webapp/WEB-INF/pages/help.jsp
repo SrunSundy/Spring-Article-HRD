@@ -78,16 +78,14 @@
 			
 			.action-url{
 				margin-bottom: 10px;
+				align:center;
 			}
 			
-			.action-url select{
-				width: 10%;
-			}
 			.action-url input{
-				width: 84%;
+				width: 80%;
 			}
 			.action-url button{
-				width: 5%;
+				padding: 5px 10px;
 			}
 			.action-url label{
 				background-color:#fff;
