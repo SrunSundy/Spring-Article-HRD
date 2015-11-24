@@ -51,6 +51,14 @@
 				cursor:pointer;
 			}
 			
+			.button > pre{
+				font-size:20px;
+				color:red;
+				float:right;
+				background-color:blue;
+				color:#fff;
+				padding: 0px 5px 3px 5px;;
+			}
 			input, select, button{
 				padding: 5px;	
 			}
@@ -61,7 +69,7 @@
 			.a-row{
 				width: 90%;
 			}
-			.a-row pre{
+			.a-row > pre{
 				text-align:center;
 				font-size:30px;
 				color :blue;
@@ -121,11 +129,13 @@
 							<button ng-click="showTable('article')">ARTICLE</button>
 							<button ng-click="showTable('user')">USER</button>
 							<button ng-click="showTable('category')">CATEGORY</button>
+							<pre>Main URL : https://article-api.herokuapp.com/</pre>
 						</div>
 						<div class="table-block">
+							
 							<table class="table">
 								<tr>
-									<th>URL</th>
+									<th>RELATIVE_URL</th>
 									<th>METHOD</th>
 									<th>DESCRIPTION</th>
 								</tr>
